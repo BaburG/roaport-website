@@ -14,3 +14,11 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+
+module.exports = {
+  images: {
+    loader: 'custom',
+    loaderFile: './src/lib/imageLoader.ts',
+  },
+}
