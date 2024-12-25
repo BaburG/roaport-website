@@ -15,7 +15,7 @@ export async function PostGrid() {
     const posts: Post[] = data.map(report => ({
         id: report.id.toString(),
         name: report.name,
-        imageUrl: `/placeholder.svg?height=300&width=400`, // Assuming imageUrl is constructed like this
+        imageUrl: `https://img.roaport.com/${report.file_name}`, // Assuming imageUrl is constructed like this
         longitude: report.longitude,
         latitude: report.latitude,
         dateCreated: report.date_created ? new Date(report.date_created).toISOString() : "", // Ensure string format
