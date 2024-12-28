@@ -2,24 +2,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Post } from "@/data/posts"
 import Image from "next/image"
-import { PrismaClient } from "@prisma/client"
+import { fetchPosts } from "@/lib/data"
 
-const prisma = new PrismaClient;
 
 export async function PostGrid() {
- 
-    const data = await prisma.reports.findMany({
-
-    })
-    
-    const posts: Post[] = data.map(report => ({
-        id: report.id.toString(),
-        name: report.name,
-        imageUrl: `https://img.roaport.com/${report.file_name}`, // Assuming imageUrl is constructed like this
-        longitude: report.longitude,
-        latitude: report.latitude,
-        dateCreated: report.date_created ? new Date(report.date_created).toISOString() : "", // Ensure string format
-    }));
+    const posts : Post[]  = await fetchPosts();
 
 
     return (
