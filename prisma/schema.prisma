@@ -8,9 +8,11 @@ datasource db {
 }
 
 model UploadScoreboard {
-  id          Int     @id
-  uploadCount Int?    @default(0) @map("upload_count")
-  Report      reports @relation(fields: [id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_reports_id")
+  id          Int      @id @default(autoincrement())
+  username    String   @unique @db.VarChar(255) // Unique username for each user
+  total       Int      @default(0)             // Total reports for the user
+
+  reports     reports[]                        // Relation to reports
 
   @@map("upload_scoreboard")
 }
@@ -23,5 +25,12 @@ model reports {
   bucket_name      String            @db.VarChar(255)
   file_name        String            @db.VarChar(255)
   date_created     DateTime?         @default(now()) @db.Timestamp(6)
-  UploadScoreboard UploadScoreboard?
+  type             String?           @db.VarChar(255) // Type field
+  username         String            @db.VarChar(255) // Username field
+  verified         DateTime?                          // Verified field (nullable timestamp)
+  detail           String?           @db.Text         // Detailed description of the report
+
+  Scoreboard       UploadScoreboard? @relation(fields: [username], references: [username], onDelete: Cascade)
+
+  @@map("reports")
 }
