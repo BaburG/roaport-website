@@ -4,7 +4,7 @@ import { Post } from "@/data/posts"
 import Image from "next/image"
 import { fetchPosts } from "@/lib/data"
 
-
+export const dynamic = 'force-dynamic';
 export async function PostGrid() {
     const posts : Post[]  = await fetchPosts();
 
