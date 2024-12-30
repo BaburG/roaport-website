@@ -1,10 +1,9 @@
 import { Post } from "@/data/posts"
-import { PrismaClient } from "@prisma/client"
+import { prisma } from "@/lib/prisma";
 
 
 
 export async function fetchPosts() {
-    const prisma = new PrismaClient;
 
     const data = await prisma.reports.findMany({
 
