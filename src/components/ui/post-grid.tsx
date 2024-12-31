@@ -49,7 +49,7 @@ function PostCard({ post }: { post: Post }) {
                     <strong>Date Created:</strong> {new Date(post.dateCreated).toLocaleString()}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                    <strong>Date Verified:</strong> {post.verified != null ? new Date(post.verified).toLocaleString() : "Not Verified"}
+                    <strong>Date Verified:</strong> {post.verified != "" ? new Date(post.verified).toLocaleString() : "Not Verified"}
                 </p>
             </CardContent>
         </Card>
