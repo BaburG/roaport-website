@@ -36,12 +36,20 @@ function PostCard({ post }: { post: Post }) {
                 </AspectRatio>
             </CardHeader>
             <CardContent className="p-4">
-                <CardTitle className="text-xl mb-2">{post.name}</CardTitle>
+                <CardTitle className="text-xl mb-2">{post.username}</CardTitle>
                 <p className="text-sm text-muted-foreground mb-1">
                     <strong>Location:</strong> ({post.longitude.toFixed(4)}, {post.latitude.toFixed(4)})
                 </p>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-muted-foreground mb-1">
+                    <strong>Type:</strong> {post.type}
+                </p>
+                <p className="text-sm text-muted-foreground mb-1">
+                    <strong>Description:</strong> {post.description}
+                </p><p className="text-sm text-muted-foreground mb-1">
                     <strong>Date Created:</strong> {new Date(post.dateCreated).toLocaleString()}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                    <strong>Date Verified:</strong> {post.verified != null ? new Date(post.verified).toLocaleString() : "Not Verified"}
                 </p>
             </CardContent>
         </Card>
