@@ -17,10 +17,10 @@ export async function fetchPosts() {
         longitude: report.longitude,
         latitude: report.latitude,
         dateCreated: report.date_created ? new Date(report.date_created).toISOString() : "", // Ensure string format
-        type: report.type,
-        description: report.detail,
+        type: report.type ?? "",
+        description: report.detail ?? "",
         username: report.username,
-        verified: report.verified
+        verified: report.verified ? report.verified.toISOString() : ""
     }));
     return posts
 }
