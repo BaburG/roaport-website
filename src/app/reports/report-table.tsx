@@ -13,16 +13,6 @@ export function ReportTable({ reports }: { reports: Post[] }) {
     router.push(`/posts/${id}`)
   }
 
-  const handleApprove = (id: string) => {
-    // Implement approve logic
-    console.log(`Approving report ${id}`)
-  }
-
-  const handleReject = (id: string) => {
-    // Implement reject logic
-    console.log(`Rejecting report ${id}`)
-  }
-
   return (
     <Table>
       <TableHeader>

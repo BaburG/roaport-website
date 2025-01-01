@@ -8,7 +8,6 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 export default function MapWithMarkers() {
   const mapContainer = useRef<HTMLDivElement>(null);
   const map = useRef<mapboxgl.Map | null>(null);
-  const [posts, setPosts] = useState<Post[]>([]);
 
   useEffect(() => {
     if (!mapContainer.current) return;
@@ -28,7 +27,6 @@ export default function MapWithMarkers() {
         const response = await fetch("/api/posts");
         if (!response.ok) throw new Error("Failed to fetch posts");
         const fetchedPosts: Post[] = await response.json();
-        setPosts(fetchedPosts);
 
         const bounds = new mapboxgl.LngLatBounds();
 
