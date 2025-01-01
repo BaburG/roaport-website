@@ -1,29 +1,32 @@
-import { Suspense } from "react"
-import { fetchPostById } from "@/lib/data"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { AspectRatio } from "@/components/ui/aspect-ratio"
-import Image from "next/image"
-import { Button } from "@/components/ui/button"
-import { MapPin, Calendar, CheckCircle, AlertCircle } from 'lucide-react'
-import { PostDetailSkeleton } from "@/components/ui/post-detail-skeleton"
-import { Metadata } from 'next'
+import { Suspense } from "react";
+import { fetchPostById } from "@/lib/data";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { AspectRatio } from "@/components/ui/aspect-ratio";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { MapPin, Calendar, CheckCircle, AlertCircle } from "lucide-react";
+import { PostDetailSkeleton } from "@/components/ui/post-detail-skeleton";
+import { Metadata } from "next";
 
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const post = await fetchPostById(params.id)
+// Generate metadata
+export async function generateMetadata({ params }: { params: Promise<{ id: string }> }): Promise<Metadata> {
+  const { id } = await params;
+  const post = await fetchPostById(id);
   return {
-    title: post ? `${post.name} | Hazard Report` : 'Hazard Report Details',
-  }
+    title: post ? `${post.name} | Hazard Report` : "Hazard Report Details",
+  };
 }
 
+// Post detail component
 async function PostDetail({ id }: { id: string }) {
-  const post = await fetchPostById(id)
+  const post = await fetchPostById(id);
 
   if (!post) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
         <h1 className="text-2xl font-bold">Post not found.</h1>
       </div>
-    )
+    );
   }
 
   return (
@@ -90,17 +93,19 @@ async function PostDetail({ id }: { id: string }) {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
 
-export default function PostDetailPage({ params }: { params: { id: string } }) {
+// Main component
+export default async function PostDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
+
   return (
     <main className="min-h-screen bg-background flex flex-col items-center py-12 px-4">
       <h1 className="text-4xl font-bold mb-8">Hazard Report Details</h1>
       <Suspense fallback={<PostDetailSkeleton />}>
-        <PostDetail id={params.id} />
+        <PostDetail id={id} />
       </Suspense>
     </main>
-  )
+  );
 }
-

@@ -23,14 +23,12 @@ export default function MapWithMarkers() {
       console.log("Map loaded successfully");
 
       try {
-        // Veriyi API'den çek
         const response = await fetch("/api/posts");
         if (!response.ok) throw new Error("Failed to fetch posts");
         const fetchedPosts: Post[] = await response.json();
 
         const bounds = new mapboxgl.LngLatBounds();
 
-        // Marker ve Popup Ekle
         fetchedPosts.forEach((post) => {
           const popup = new mapboxgl.Popup({ offset: 25 }).setHTML(`
             <div>
@@ -40,16 +38,19 @@ export default function MapWithMarkers() {
             </div>
           `);
 
-          new mapboxgl.Marker()
-            .setLngLat([post.longitude, post.latitude])
-            .setPopup(popup)
-            .addTo(map.current!);
+          if (map.current) {
+            new mapboxgl.Marker()
+              .setLngLat([post.longitude, post.latitude])
+              .setPopup(popup)
+              .addTo(map.current);
 
-          bounds.extend([post.longitude, post.latitude]);
+            bounds.extend([post.longitude, post.latitude]);
+          }
         });
 
-        // Haritayı marker'lara göre ayarla ve zoom oranını azalt
-        map.current.fitBounds(bounds, { padding: 100, maxZoom: 10 }); // maxZoom ile daha az yakınlaştırma
+        if (map.current) {
+          map.current.fitBounds(bounds, { padding: 100, maxZoom: 10 });
+        }
       } catch (error) {
         console.error("Failed to fetch posts:", error);
       }
@@ -60,6 +61,5 @@ export default function MapWithMarkers() {
     };
   }, []);
 
-  // Harita yüksekliği artırıldı
   return <div ref={mapContainer} style={{ width: "100%", height: "700px" }} />;
 }
