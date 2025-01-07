@@ -7,6 +7,7 @@ const navItems = [
   { href: '/', label: 'Homepage' },
   { href: '/reports', label: 'Reports' },
   { href: '/map', label: 'Map' },
+  { href: '/scoreboard', label: 'Scoreboard' },
 ]
 
 export function Header() {
