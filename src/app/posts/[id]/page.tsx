@@ -1,18 +1,25 @@
+import type { Metadata } from "next";
 import { Suspense } from "react";
+
 import { fetchPostById } from "@/lib/data";
 import { PostDetailSkeleton } from "@/components/ui/post-detail-skeleton";
 import { InteractivePostDetail } from "@/components/InteractivePostDetail";
-import { Metadata } from "next";
 
-// Generate metadata
-export async function generateMetadata({ params }: { params: { id: string } }): Promise<Metadata> {
-  const post = await fetchPostById(params.id);
+interface PageProps {
+  params: Promise<{
+    id: string;
+  }>;
+}
+
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { id } = await params;
+  const post = await fetchPostById(id);
+
   return {
     title: post ? `${post.name} | Hazard Report` : "Hazard Report Details",
   };
 }
 
-// Post detail component
 async function PostDetail({ id }: { id: string }) {
   const post = await fetchPostById(id);
 
@@ -27,15 +34,15 @@ async function PostDetail({ id }: { id: string }) {
   return <InteractivePostDetail post={post} />;
 }
 
-// Main component
-export default async function PostDetailPage({ params }: { params: { id: string } }) {
+export default async function PostDetailPage({ params }: PageProps) {
+  const { id } = await params;
+
   return (
     <main className="min-h-screen bg-background flex flex-col items-center py-12 px-4">
       <h1 className="text-4xl font-bold mb-8">Hazard Report Details</h1>
       <Suspense fallback={<PostDetailSkeleton />}>
-        <PostDetail id={params.id} />
+        <PostDetail id={id} />
       </Suspense>
     </main>
   );
 }
-
