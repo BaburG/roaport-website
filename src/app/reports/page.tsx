@@ -4,6 +4,9 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { fetchPosts } from "@/lib/data"
 import { Post } from "@/data/posts"
 
+
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Hazard Reports',
   description: 'List of all hazard reports',

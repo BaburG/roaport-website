@@ -1,5 +1,7 @@
 import MapWrapper from './map-wrapper'
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Hazard Map',
   description: 'Interactive map of reported hazards',
