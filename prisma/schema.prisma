@@ -35,10 +35,3 @@ model reports {
   @@map("reports")
 }
 
-model UploadScoreboard {
-  id       Int    @id @default(autoincrement())
-  total    Int    @default(0)
-  username String @unique
-
-  @@map("upload_scoreboard")
-}
