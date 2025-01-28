@@ -3,6 +3,8 @@ import { getScores } from '@/lib/scores';
 import { ScoreboardList } from '@/components/ui/ScoreboardList';
 import { ScoreboardSkeleton } from '@/components/ui/ScoreboardSkeleton';
 
+export const dynamic = 'force-dynamic';
+
 export const metadata = {
   title: 'Upload Scoreboard',
   description: 'View the top uploaders and their scores',

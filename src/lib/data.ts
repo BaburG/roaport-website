@@ -49,3 +49,17 @@ export async function fetchPostById(id: string): Promise<Post | null> {
   
     return post;
   }
+
+  export async function fetchScores() {
+    const data = await prisma.uploadScoreboard.findMany({
+      take: 10,
+      orderBy: {
+        total: 'desc',
+      },
+      select: {
+        username: true,
+        total: true,
+      },
+    });
+    return data;
+  }
