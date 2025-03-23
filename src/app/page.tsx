@@ -1,13 +1,7 @@
-import { PostGrid } from "@/components/ui/post-grid"
+import { redirect } from 'next/navigation';
 
-export const dynamic = 'force-dynamic';
-
-export default function Home() {
-
-  return (
-    <main className="min-h-screen bg-background">
-      <PostGrid />
-    </main>
-  )
+export default function RootPage() {
+  redirect('/en');
+  return null;
 }
 

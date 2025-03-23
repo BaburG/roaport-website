@@ -8,6 +8,7 @@ import { InteractivePostDetail } from "@/components/InteractivePostDetail";
 interface PageProps {
   params: Promise<{
     id: string;
+    locale: string;
   }>;
 }
 
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   };
 }
 
-async function PostDetail({ id }: { id: string }) {
+async function PostDetail({ id, locale }: { id: string, locale: string }) {
   const post = await fetchPostById(id);
 
   if (!post) {
@@ -31,18 +32,23 @@ async function PostDetail({ id }: { id: string }) {
     );
   }
 
-  return <InteractivePostDetail post={post} locale="en" />;
+  return <InteractivePostDetail post={post} locale={locale} />;
 }
 
 export default async function PostDetailPage({ params }: PageProps) {
-  const { id } = await params;
+  const { id, locale } = await params;
+
+  const titles: Record<string, string> = {
+    en: "Hazard Report Details",
+    tr: "Tehlike Bildirimi Detayları"
+  };
 
   return (
     <main className="min-h-screen bg-background flex flex-col items-center py-12 px-4">
-      <h1 className="text-4xl font-bold mb-8">Hazard Report Details</h1>
+      <h1 className="text-4xl font-bold mb-8">{titles[locale]}</h1>
       <Suspense fallback={<PostDetailSkeleton />}>
-        <PostDetail id={id} />
+        <PostDetail id={id} locale={locale} />
       </Suspense>
     </main>
   );
-}
+} 

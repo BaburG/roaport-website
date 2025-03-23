@@ -1,0 +1,45 @@
+{
+  "Layout": {
+    "title": "Tehlike Bildirimleri",
+    "description": "Create next app tarafından oluşturuldu"
+  },
+  "Header": {
+    "homepage": "Ana Sayfa",
+    "reports": "Bildiriler",
+    "map": "Harita",
+    "scoreboard": "Skor Tablosu"
+  },
+  "HomePage": {
+    "title": "Yüklenen Görüntüler"
+  },
+  "PostCard": {
+    "location": "Konum",
+    "type": "Tür",
+    "description": "Açıklama",
+    "dateCreated": "Oluşturulma Tarihi",
+    "dateVerified": "Doğrulanma Tarihi",
+    "notVerified": "Doğrulanmadı"
+  },
+  "MapPage": {
+    "title": "Tehlike Haritası",
+    "description": "Bildirilen tehlikelerin interaktif haritası"
+  },
+  "ReportsPage": {
+    "title": "Tehlike Bildirimleri",
+    "description": "Tüm tehlike bildirimlerinin listesi",
+    "columns": {
+      "id": "ID",
+      "username": "Kullanıcı Adı",
+      "name": "İsim",
+      "type": "Tür",
+      "description": "Açıklama",
+      "location": "Konum",
+      "dateCreated": "Oluşturulma Tarihi",
+      "status": "Durum"
+    }
+  },
+  "ScoreboardPage": {
+    "title": "Yükleme Skor Tablosu",
+    "description": "En çok yükleme yapanları ve puanlarını görüntüleyin"
+  }
+} 
