@@ -9,6 +9,7 @@ import { MapPin, Calendar, CheckCircle, AlertCircle } from 'lucide-react';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { approveReport, rejectReport } from "@/actions/report-actions";
 import { useRouter } from "next/navigation";
+import { formatDate } from "@/lib/language";
 
 interface Post {
   id: string;
@@ -23,9 +24,30 @@ interface Post {
   verified: string | null;
 }
 
-export function InteractivePostDetail({ post }: { post: Post }) {
+export function InteractivePostDetail({ post, locale }: { post: Post; locale: string }) {
   const [isApproveDialogOpen, setIsApproveDialogOpen] = useState(false);
   const router = useRouter();
+
+  const translations = {
+    en: {
+      location: "Location",
+      type: "Type",
+      description: "Description",
+      dateCreated: "Date Created",
+      dateVerified: "Date Verified",
+      notVerified: "Not Verified"
+    },
+    tr: {
+      location: "Konum",
+      type: "Tür",
+      description: "Açıklama",
+      dateCreated: "Oluşturulma Tarihi",
+      dateVerified: "Doğrulanma Tarihi",
+      notVerified: "Doğrulanmadı"
+    }
+  };
+
+  const t = translations[locale as keyof typeof translations];
 
   const handleApprove = async () => {
     await approveReport(parseInt(post.id));
@@ -58,7 +80,7 @@ export function InteractivePostDetail({ post }: { post: Post }) {
           <CardTitle className="text-3xl font-bold mb-6">{post.username}</CardTitle>
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-semibold mb-2">Location</h3>
+              <h3 className="text-lg font-semibold mb-2">{t.location}</h3>
               <div className="flex items-center space-x-2 text-sm">
                 <MapPin className="w-4 h-4 text-muted-foreground" />
                 <span>
@@ -67,14 +89,14 @@ export function InteractivePostDetail({ post }: { post: Post }) {
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Type of Hazard</h3>
+              <h3 className="text-lg font-semibold mb-2">{t.type}</h3>
               <div className="flex items-center space-x-2 text-sm">
                 <AlertCircle className="w-4 h-4 text-muted-foreground" />
                 <span>{post.type}</span>
               </div>
             </div>
             <div>
-              <h3 className="text-lg font-semibold mb-2">Description</h3>
+              <h3 className="text-lg font-semibold mb-2">{t.description}</h3>
               <p className="text-sm text-muted-foreground">{post.description}</p>
             </div>
             <div>
@@ -82,12 +104,12 @@ export function InteractivePostDetail({ post }: { post: Post }) {
               <div className="space-y-2 text-sm">
                 <div className="flex items-center space-x-2">
                   <Calendar className="w-4 h-4 text-muted-foreground" />
-                  <span>Created: {new Date(post.dateCreated).toLocaleString()}</span>
+                  <span>{t.dateCreated}: {formatDate(post.dateCreated, locale)}</span>
                 </div>
                 {post.verified && (
                   <div className="flex items-center space-x-2">
                     <CheckCircle className="w-4 h-4 text-green-500" />
-                    <span>Verified: {new Date(post.verified).toLocaleString()}</span>
+                    <span>{t.dateVerified}: {formatDate(post.verified, locale)}</span>
                   </div>
                 )}
               </div>

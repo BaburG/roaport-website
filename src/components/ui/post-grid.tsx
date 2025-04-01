@@ -1,19 +1,45 @@
+"use client"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { AspectRatio } from "@/components/ui/aspect-ratio"
 import { Post } from "@/data/posts"
 import Image from "next/image"
-import { fetchPosts } from "@/lib/data"
-import Link from "next/link"
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+import { getLocale } from '@/i18n'
+import { formatDate } from '@/lib/language'
+import { useEffect, useState } from "react"
 
+export function PostGrid() {
+    const [posts, setPosts] = useState<Post[]>([]);
+    const [loading, setLoading] = useState(true);
 
+    useEffect(() => {
+        async function loadPosts() {
+            try {
+                const response = await fetch('/api/posts');
+                if (response.ok) {
+                    const data = await response.json();
+                    setPosts(data);
+                }
+            } catch (error) {
+                console.error("Failed to fetch posts:", error);
+            } finally {
+                setLoading(false);
+            }
+        }
+        
+        loadPosts();
+    }, []);
 
-export async function PostGrid() {
-    const posts: Post[] = await fetchPosts();
-
+    if (loading) {
+        return <div className="container mx-auto px-4 py-8">Loading posts...</div>;
+    }
 
     return (
         <div className="container mx-auto px-4 py-8">
-            <h1 className="text-3xl font-bold text-center mb-8">Uploaded Images</h1>
+            <h1 className="text-3xl font-bold text-center mb-8">
+                <HomePageTitle />
+            </h1>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {posts.map((post) => (
                     <PostCard key={post.id} post={post} />
@@ -23,9 +49,47 @@ export async function PostGrid() {
     )
 }
 
+// Client component for title with translations
+function HomePageTitle() {
+    const pathname = usePathname() || '';
+    const locale = getLocale(pathname);
+    
+    const titles = {
+        en: "Uploaded Images",
+        tr: "Yüklenen Görüntüler"
+    };
+    
+    return <>{titles[locale]}</>;
+}
+
+// Client component for PostCard with translations
 function PostCard({ post }: { post: Post }) {
+    const pathname = usePathname() || '';
+    const locale = getLocale(pathname);
+    
+    const translations = {
+        en: {
+            location: "Location",
+            type: "Type",
+            description: "Description",
+            dateCreated: "Date Created",
+            dateVerified: "Date Verified",
+            notVerified: "Not Verified"
+        },
+        tr: {
+            location: "Konum",
+            type: "Tür",
+            description: "Açıklama",
+            dateCreated: "Oluşturulma Tarihi",
+            dateVerified: "Doğrulanma Tarihi",
+            notVerified: "Doğrulanmadı"
+        }
+    };
+    
+    const t = translations[locale];
+    
     return (
-        <Link href={`/posts/${post.id}`}>
+        <Link href={`/${locale}/posts/${post.id}`}>
             <Card>
                 <CardHeader className="p-0">
                     <AspectRatio ratio={4 / 3}>
@@ -40,18 +104,18 @@ function PostCard({ post }: { post: Post }) {
                 <CardContent className="p-4">
                     <CardTitle className="text-xl mb-2">{post.username}</CardTitle>
                     <p className="text-sm text-muted-foreground mb-1">
-                        <strong>Location:</strong> ({post.longitude.toFixed(4)}, {post.latitude.toFixed(4)})
+                        <strong>{t.location}:</strong> ({post.longitude.toFixed(4)}, {post.latitude.toFixed(4)})
                     </p>
                     <p className="text-sm text-muted-foreground mb-1">
-                        <strong>Type:</strong> {post.type}
+                        <strong>{t.type}:</strong> {post.type}
                     </p>
                     <p className="text-sm text-muted-foreground mb-1">
-                        <strong>Description:</strong> {post.description}
+                        <strong>{t.description}:</strong> {post.description}
                     </p><p className="text-sm text-muted-foreground mb-1">
-                        <strong>Date Created:</strong> {new Date(post.dateCreated).toLocaleString()}
+                        <strong>{t.dateCreated}:</strong> {formatDate(post.dateCreated, locale)}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                        <strong>Date Verified:</strong> {post.verified != "" ? new Date(post.verified).toLocaleString() : "Not Verified"}
+                        <strong>{t.dateVerified}:</strong> {post.verified != "" ? formatDate(post.verified, locale) : t.notVerified}
                     </p>
                 </CardContent>
             </Card>
