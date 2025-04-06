@@ -9,6 +9,15 @@
     "map": "Map",
     "scoreboard": "Scoreboard"
   },
+  "Landing": {
+    "tagline": "Road Hazard Reporting System",
+    "description": "ROAPORT is an innovative platform that enables citizens to report road hazards and infrastructure issues quickly and efficiently.",
+    "subDescription": "Join thousands of users who are making roads safer for everyone by reporting potholes, broken traffic lights, and other hazards.",
+    "viewReports": "View Reports",
+    "exploreMap": "Explore Map",
+    "downloadApp": "Download Our Mobile App",
+    "scanToDownload": "Scan QR code with your phone camera to download the app"
+  },
   "HomePage": {
     "title": "Uploaded Images"
   },

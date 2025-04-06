@@ -1,7 +1,7 @@
 {
   "Layout": {
     "title": "Tehlike Bildirimleri",
-    "description": "Create next app tarafından oluşturuldu"
+    "description": "Tehlike bildirim uygulaması"
   },
   "Header": {
     "homepage": "Ana Sayfa",
@@ -9,8 +9,17 @@
     "map": "Harita",
     "scoreboard": "Skor Tablosu"
   },
+  "Landing": {
+    "tagline": "Yol Tehlike Bildirim Sistemi",
+    "description": "ROAPORT, vatandaşların yol tehlikelerini ve altyapı sorunlarını hızlı ve verimli bir şekilde bildirmelerini sağlayan yenilikçi bir platformdur.",
+    "subDescription": "Çukurları, bozuk trafik ışıklarını ve diğer tehlikeleri bildirerek yolları herkes için daha güvenli hale getiren binlerce kullanıcıya katılın.",
+    "viewReports": "Bildirimleri Görüntüle",
+    "exploreMap": "Haritayı Keşfet",
+    "downloadApp": "Mobil Uygulamamızı İndir",
+    "scanToDownload": "Uygulamayı indirmek için QR kodunu telefonunuzun kamerasıyla tarayın"
+  },
   "HomePage": {
-    "title": "Yüklenen Görüntüler"
+    "title": "Yüklenen Görseller"
   },
   "PostCard": {
     "location": "Konum",

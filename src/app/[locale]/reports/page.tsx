@@ -1,14 +1,32 @@
-import { Suspense } from 'react'
+"use client"
+
+import React, { useEffect, useState } from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
-import { fetchPosts } from "@/lib/data"
 import { Post } from "@/data/posts"
 import Image from 'next/image'
 
-export const dynamic = 'force-dynamic';
+export default function ReportsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const [reports, setReports] = useState<Post[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { locale } = React.use(params);
 
-export default async function ReportsPage({ params }: { params: Promise<{ locale: string }> }) {
-  const reports = await getReports()
-  const { locale } = await params;
+  useEffect(() => {
+    async function fetchReports() {
+      try {
+        const response = await fetch('/api/posts');
+        if (response.ok) {
+          const data = await response.json();
+          setReports(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch reports:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    
+    fetchReports();
+  }, []);
 
   const titles: Record<string, string> = {
     en: "Hazard Reports",
@@ -18,7 +36,9 @@ export default async function ReportsPage({ params }: { params: Promise<{ locale
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-8">{titles[locale]}</h1>
-      <Suspense fallback={<TableSkeleton />}>
+      {loading ? (
+        <TableSkeleton />
+      ) : (
         <div className="w-full overflow-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead>
@@ -42,6 +62,7 @@ export default async function ReportsPage({ params }: { params: Promise<{ locale
                         width={64}
                         height={64}
                         className="rounded-md object-cover w-full h-full"
+                        unoptimized
                       />
                     </div>
                   </td>
@@ -61,18 +82,9 @@ export default async function ReportsPage({ params }: { params: Promise<{ locale
             </tbody>
           </table>
         </div>
-      </Suspense>
+      )}
     </div>
   )
-}
-
-async function getReports(): Promise<Post[]> {
-  try {
-    return await fetchPosts()
-  } catch (error) {
-    console.error("Failed to fetch reports:", error)
-    return []
-  }
 }
 
 function TableSkeleton() {
