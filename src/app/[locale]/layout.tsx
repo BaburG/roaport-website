@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/header";
@@ -19,13 +19,36 @@ export function generateStaticParams() {
   return locales.map(locale => ({ locale }));
 }
 
+// Define viewport separately as recommended by Next.js
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-  const { locale } = await params;
-  const messages = await getTranslations(locale as Locale);
+  // Handle params as a promise
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale as Locale;
+  const messages = await getTranslations(locale);
   
   return {
-    title: messages.Layout.title,
-    description: messages.Layout.description,
+    title: `ROAPORT - ${messages.Layout.title}`,
+    description: locale === 'en' 
+      ? "ROAPORT is an innovative road hazard reporting system that enables citizens to report infrastructure issues quickly and efficiently."
+      : "ROAPORT, vatandaşların yol tehlikelerini ve altyapı sorunlarını hızlı ve verimli bir şekilde bildirmelerini sağlayan yenilikçi bir platformdur.",
+    keywords: locale === 'en' 
+      ? "road hazards, infrastructure, reporting system, potholes, safety, ROAPORT"
+      : "yol tehlikeleri, altyapı, bildirim sistemi, çukurlar, güvenlik, ROAPORT",
+    authors: [{ name: "ROAPORT Team" }],
+    robots: "index, follow",
+    openGraph: {
+      type: "website",
+      title: `ROAPORT - ${messages.Layout.title}`,
+      description: locale === 'en'
+        ? "Report road hazards and infrastructure issues quickly and efficiently with ROAPORT."
+        : "ROAPORT ile yol tehlikelerini ve altyapı sorunlarını hızlı ve verimli bir şekilde bildirin.",
+      siteName: "ROAPORT",
+    },
   };
 }
 
@@ -36,12 +59,15 @@ export default async function RootLayout({
   children: React.ReactNode;
   params: Promise<{ locale: string }>;
 }>) {
-  const { locale } = await params;
+  // Handle params as a promise
+  const resolvedParams = await params;
+  const locale = resolvedParams.locale;
 
   return (
-    <html lang={locale}>
+    <html lang={locale} suppressHydrationWarning>
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        suppressHydrationWarning
       >
         <div>
           <Header />

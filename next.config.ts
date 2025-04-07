@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  reactStrictMode: true,
+  compiler: {
+    // Enables Server and Client component reuse (instead of re-rendering)
+    reactRemoveProperties: process.env.NODE_ENV === 'production' ? { properties: ['^data-.*$', '^bis_.*$', '^__processed_.*$'] } : false,
+  },
 };
 
 export default nextConfig;

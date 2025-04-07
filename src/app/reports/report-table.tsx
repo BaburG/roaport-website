@@ -37,6 +37,7 @@ export function ReportTable({ reports }: { reports: Post[] }) {
                 width={80}
                 height={80}
                 className="rounded-md object-cover"
+                unoptimized
               />
             </TableCell>
             <TableCell className="font-medium">{report.name}</TableCell>

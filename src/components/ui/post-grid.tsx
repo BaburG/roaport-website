@@ -98,6 +98,10 @@ function PostCard({ post }: { post: Post }) {
                             alt={post.name}
                             fill
                             className="object-cover rounded-t-lg"
+                            loader={({ src, width, quality }) => {
+                                const params = [`width=${width}`, `quality=${quality || 75}`, 'format=auto'];
+                                return `https://roaport.com/cdn-cgi/image/${params.join(',')}/${src}`;
+                            }}
                         />
                     </AspectRatio>
                 </CardHeader>

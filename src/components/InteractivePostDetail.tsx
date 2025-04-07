@@ -70,6 +70,10 @@ export function InteractivePostDetail({ post, locale }: { post: Post; locale: st
               alt={post.name}
               fill
               className="object-cover rounded-t-lg transition-transform duration-300 group-hover:scale-105"
+              loader={({ src, width, quality }) => {
+                const params = [`width=${width}`, `quality=${quality || 75}`, 'format=auto'];
+                return `https://roaport.com/cdn-cgi/image/${params.join(',')}/${src}`;
+              }}
             />
           </AspectRatio>
           <div className="absolute inset-0 bg-black bg-opacity-40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
