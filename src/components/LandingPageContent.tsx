@@ -2,30 +2,22 @@
 
 import { QRCodeCanvas } from 'qrcode.react';
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Added Card components
 import { motion } from "framer-motion";
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
+import { MapPin, Smartphone, CheckCircle, ShieldCheck, Users, Send, Search, Bell, Edit3, BarChart2 } from 'lucide-react'; // Example icons
+import { useTheme } from "next-themes";
 
-// Animation variants
+// Animation variants (re-using yours)
 const containerVariants = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      delayChildren: 0.3,
-      staggerChildren: 0.2
-    }
-  }
+  visible: { opacity: 1, transition: { delayChildren: 0.3, staggerChildren: 0.2 } }
 };
 
 const itemVariants = {
   hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: { type: "spring", stiffness: 300, damping: 24 }
-  }
+  visible: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 300, damping: 24 } }
 };
 
 interface LandingPageContentProps {
@@ -37,302 +29,359 @@ interface LandingPageContentProps {
     exploreMap: string;
     downloadApp: string;
     scanToDownload: string;
+    // New messages for added sections
+    howItWorks: string;
+    step1Title: string;
+    step1Description: string;
+    step2Title: string;
+    step2Description: string;
+    step3Title: string;
+    step3Description: string;
+    step4Title: string;
+    step4Description: string;
+    featuresTitle: string;
+    feature1Title: string;
+    feature1Description: string;
+    feature2Title: string;
+    feature2Description: string;
+    feature3Title: string;
+    feature3Description: string;
+    feature4Title: string;
+    feature4Description: string;
   };
   locale: string;
 }
 
-export function LandingPageContent({ messages, locale }: LandingPageContentProps) {
+// Placeholder for new messages if not passed
+const defaultMessages = {
+  howItWorks: "How Roaport Works",
+  step1Title: "Snap & Send",
+  step1Description: "Easily report hazards using your phone's camera and GPS.",
+  step2Title: "AI Verification",
+  step2Description: "Our smart system quickly verifies the legitimacy of reports.",
+  step3Title: "Track Progress",
+  step3Description: "See real-time updates as authorities address the issue.",
+  step4Title: "Safer Communities",
+  step4Description: "Contribute to making your city's infrastructure better for everyone.",
+  featuresTitle: "Why Choose Roaport?",
+  feature1Title: "Effortless Reporting",
+  feature1Description: "Submit hazard reports in seconds with our intuitive mobile app.",
+  feature2Title: "Transparent Tracking",
+  feature2Description: "View all reported hazards on a public map and monitor their status.",
+  feature3Title: "AI-Powered Accuracy",
+  feature3Description: "Machine learning helps ensure reports are genuine and correctly categorized.",
+  feature4Title: "Community Driven",
+  feature4Description: "Be part of the solution for safer roads and public spaces.",
+};
+
+
+export function LandingPageContent({ messages: propMessages, locale }: LandingPageContentProps) {
+  const messages = { ...defaultMessages, ...propMessages };
+
+  const howItWorksSteps = [
+    { icon: <Send className="w-8 h-8 text-blue-600" />, title: messages.step1Title, description: messages.step1Description },
+    { icon: <ShieldCheck className="w-8 h-8 text-blue-600" />, title: messages.step2Title, description: messages.step2Description },
+    { icon: <Search className="w-8 h-8 text-blue-600" />, title: messages.step3Title, description: messages.step3Description },
+    { icon: <Users className="w-8 h-8 text-blue-600" />, title: messages.step4Title, description: messages.step4Description },
+  ];
+
+  const features = [
+    { icon: <Smartphone className="w-8 h-8 text-teal-500" />, title: messages.feature1Title, description: messages.feature1Description },
+    { icon: <MapPin className="w-8 h-8 text-teal-500" />, title: messages.feature2Title, description: messages.feature2Description },
+    { icon: <CheckCircle className="w-8 h-8 text-teal-500" />, title: messages.feature3Title, description: messages.feature3Description },
+    { icon: <BarChart2 className="w-8 h-8 text-teal-500" />, title: messages.feature4Title, description: messages.feature4Description },
+  ];
+
   return (
-    <>
-      <motion.div 
-        className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start mb-24"
+    <div className="relative">
+      {/* Hero Section */}
+      <motion.section
+        className="relative py-16 md:py-24 lg:py-32 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-700 dark:via-blue-800 dark:to-indigo-900 text-white overflow-hidden"
         variants={containerVariants}
         initial="hidden"
         animate="visible"
-        suppressHydrationWarning
       >
-        <motion.div 
-          className="flex flex-col gap-6 max-w-xl"
-          variants={itemVariants}
-          suppressHydrationWarning
-        >
-          <div className="flex items-center gap-4 mb-2" suppressHydrationWarning>
-            <motion.div 
-              className="relative w-16 h-16 md:w-20 md:h-20"
-              whileHover={{ rotate: 5, scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-              suppressHydrationWarning
-            >
-              <Image
-                src="/roaport-logo.svg"
-                alt="ROAPORT Logo"
-                width={80}
-                height={80}
-                className="object-contain w-full h-full"
-                unoptimized
-                loader={({ src }) => {
-                  return src;
-                }}
-              />
-            </motion.div>
-            <h1 className="text-4xl md:text-6xl font-bold tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">
-              ROAPORT
-            </h1>
-          </div>
-          
-          <motion.h2 
-            className="text-xl md:text-2xl text-muted-foreground mt-2 font-medium"
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <motion.div
+            className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
             variants={itemVariants}
-            suppressHydrationWarning
           >
-            {messages.tagline}
-          </motion.h2>
-          
-          <motion.div 
-            className="text-lg text-muted-foreground"
-            variants={itemVariants}
-            suppressHydrationWarning
-          >
-            <p className="mb-4">
-              {messages.description}
-            </p>
-            <p>
-              {messages.subDescription}
-            </p>
-          </motion.div>
-          
-          <motion.div 
-            className="mt-8 flex flex-col sm:flex-row gap-4"
-            variants={itemVariants}
-            suppressHydrationWarning
-          >
-            <Button 
-              size="lg" 
-              className="bg-primary hover:bg-primary/90 text-primary-foreground rounded-full shadow-md hover:shadow-lg transition-all py-6"
-              asChild
-            >
-              <a href={`/${locale}/reports`}>
-                {messages.viewReports}
-              </a>
-            </Button>
-            <Button 
-              size="lg" 
-              variant="outline"
-              className="rounded-full border-2 hover:bg-secondary/50 transition-all py-6"
-              asChild
-            >
-              <a href={`/${locale}/map`}>
-                {messages.exploreMap}
-              </a>
-            </Button>
-          </motion.div>
-        </motion.div>
-
-        <motion.div
-          className="w-full max-w-3xl mx-auto"
-          variants={itemVariants}
-          suppressHydrationWarning
-        >
-          <motion.div 
-            whileHover={{ y: -5 }}
-            transition={{ type: "spring", stiffness: 300, damping: 15 }}
-            suppressHydrationWarning
-          >
-            <Card className="overflow-hidden backdrop-blur-sm bg-card/90 dark:bg-card/60 shadow-xl border border-border/40 rounded-2xl">
-              <div className="p-6 md:p-8" suppressHydrationWarning>
-                <h3 className="text-2xl font-semibold mb-6 text-center bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/80">
-                  {messages.downloadApp}
-                </h3>
-                
-                <div className="flex flex-col sm:flex-row justify-center gap-10 mx-auto" suppressHydrationWarning>
-                  <motion.div
-                    className="flex flex-col items-center bg-gradient-to-b from-green-50/50 to-transparent dark:from-green-900/10 p-4 rounded-xl"
-                    whileHover={{ y: -2 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    suppressHydrationWarning
-                  >
-                    <div className="flex items-center justify-center w-11 h-11 bg-green-100 dark:bg-green-900/30 rounded-full mb-2 shadow-md">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600 dark:text-green-400">
-                        <path d="M5 12V6.5a2.5 2.5 0 0 1 5 0V12"></path>
-                        <path d="M14 12V6.5a2.5 2.5 0 0 1 5 0V12"></path>
-                        <path d="M12 8v13"></path>
-                        <path d="M5 16v0a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v0"></path>
-                      </svg>
-                    </div>
-                    <p className="mb-3 text-sm font-medium text-green-700 dark:text-green-400">Android</p>
-                    <div className="w-auto inline-block">
-                      <motion.div 
-                        className="bg-white p-2.5 rounded-lg shadow-md border border-green-100 dark:border-green-900/20 hover:shadow-lg transition-all"
-                        whileHover={{ scale: 1.03 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                        suppressHydrationWarning
-                      >
-                        <QRCodeCanvas 
-                          value="https://play.google.com/store/apps/details?id=com.roaport.app" 
-                          size={180}
-                          fgColor="#333333"
-                          bgColor="#ffffff"
-                          includeMargin={true}
-                          level="M"
-                        />
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                  
-                  <motion.div
-                    className="flex flex-col items-center bg-gradient-to-b from-blue-50/50 to-transparent dark:from-blue-900/10 p-4 rounded-xl"
-                    whileHover={{ y: -2 }}
-                    transition={{ type: "spring", stiffness: 400, damping: 15 }}
-                    suppressHydrationWarning
-                  >
-                    <div className="flex items-center justify-center w-11 h-11 bg-blue-100 dark:bg-blue-900/30 rounded-full mb-2 shadow-md">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-600 dark:text-blue-400">
-                        <path d="M12 2c.93 0 1.51.65 1.59 1.5 0 0 .15 1.5-.42 2-1.17 1-2.34 0-3.75 1.11-.83.62-.92 1.94-.92 1.94C7.43 4.71 10.5 2 12 2Z"></path>
-                        <path d="M12 7c2.21 0 4 1.79 4 4v10c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1V11c0-2.21 1.79-4 4-4Z"></path>
-                      </svg>
-                    </div>
-                    <p className="mb-3 text-sm font-medium text-blue-700 dark:text-blue-400">iOS</p>
-                    <div className="w-auto inline-block">
-                      <motion.div 
-                        className="bg-white p-2.5 rounded-lg shadow-md border border-blue-100 dark:border-blue-900/20 hover:shadow-lg transition-all"
-                        whileHover={{ scale: 1.03 }}
-                        transition={{ type: "spring", stiffness: 400, damping: 10 }}
-                        suppressHydrationWarning
-                      >
-                        <QRCodeCanvas 
-                          value="https://apps.apple.com/app/roaport/id123456789" 
-                          size={180}
-                          fgColor="#333333"
-                          bgColor="#ffffff"
-                          includeMargin={true}
-                          level="M"
-                        />
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                </div>
-                
-                <p className="text-base text-muted-foreground text-center mt-10">
-                  {messages.scanToDownload}
-                </p>
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-4 mb-2">
+                <motion.div
+                  className="relative w-14 h-14 md:w-16 md:h-16 bg-white/95 rounded-xl shadow-lg flex items-center justify-center"
+                  whileHover={{ rotate: 5, scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <Image
+                    src="/roaport-logo.svg"
+                    alt="ROAPORT Logo"
+                    width={64}
+                    height={64}
+                    className="w-full h-full"
+                    unoptimized
+                    priority
+                  />
+                </motion.div>
+                <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
+                  ROAPORT
+                </h1>
               </div>
-            </Card>
-          </motion.div>
-        </motion.div>
-      </motion.div>
 
-      {/* Modern Footer */}
-      <footer className="mt-auto pt-16 pb-8 border-t border-border/30 backdrop-blur-sm relative z-10">
-        <div className="container mx-auto px-4">
+              <motion.h2
+                className="text-xl md:text-2xl lg:text-3xl text-blue-100 dark:text-blue-200 font-medium"
+                variants={itemVariants}
+              >
+                {messages.tagline}
+              </motion.h2>
+
+              <motion.div
+                className="text-base md:text-lg text-blue-100 dark:text-blue-200 space-y-4"
+                variants={itemVariants}
+              >
+                <p>{messages.description}</p>
+                <p>{messages.subDescription}</p>
+              </motion.div>
+
+              <motion.div
+                className="mt-6 flex flex-col sm:flex-row gap-4"
+                variants={itemVariants}
+              >
+                <Button
+                  size="lg"
+                  className="bg-white hover:bg-slate-100 text-blue-700 rounded-lg shadow-md hover:shadow-lg transition-all py-2.5 px-5 text-base font-semibold w-full sm:w-auto"
+                  asChild
+                >
+                  <a href={`/${locale}/reports`}>{messages.viewReports}</a>
+                </Button>
+                <Button
+                  size="lg"
+                  variant="outline"
+                  className="rounded-lg border-2 border-blue-300 hover:bg-blue-600/20 hover:border-blue-200 text-blue-800 hover:text-white transition-all py-2.5 px-5 text-base font-semibold w-full sm:w-auto"
+                  asChild
+                >
+                  <a href={`/${locale}/map`}>{messages.exploreMap}</a>
+                </Button>
+              </motion.div>
+            </div>
+
+            <motion.div
+              className="w-full max-w-lg mx-auto lg:max-w-none lg:w-full justify-self-center lg:justify-self-end"
+              variants={itemVariants}
+            >
+              <motion.div
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 300, damping: 15 }}
+                className="relative aspect-[5/4] w-full"
+              >
+                <Image
+                  src="/city-graphic.svg"
+                  alt="City illustration with highlighted road issues"
+                  width={500}
+                  height={400}
+                  className="rounded-lg shadow-2xl object-contain w-full h-full"
+                  priority
+                  unoptimized
+                />
+              </motion.div>
+            </motion.div>
+          </motion.div>
+        </div>
+      </motion.section>
+
+      {/* How It Works Section */}
+      <section className="py-16 md:py-24 bg-white dark:bg-slate-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold text-center mb-12 lg:mb-16 text-slate-800 dark:text-slate-100"
+            variants={itemVariants}
+          >
+            {messages.howItWorks}
+          </motion.h2>
+          <motion.div 
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-8"
+            variants={containerVariants}
+          >
+            {howItWorksSteps.map((step, index) => (
+              <motion.div 
+                key={index} 
+                className="flex flex-col items-center text-center p-6 bg-white dark:bg-slate-800/50 rounded-xl shadow-md hover:shadow-lg transition-shadow"
+                variants={itemVariants}
+              >
+                <div className="mb-4 p-3 bg-blue-100/80 dark:bg-blue-900/50 rounded-full">
+                  {step.icon}
+                </div>
+                <h3 className="text-lg font-semibold mb-2 text-slate-700 dark:text-slate-200">{step.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{step.description}</p>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+      
+      {/* Features Section */}
+      <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-800/50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <motion.h2 
+            className="text-3xl md:text-4xl font-bold text-center mb-12 lg:mb-16 text-slate-800 dark:text-slate-100"
+            variants={itemVariants}
+          >
+            {messages.featuresTitle}
+          </motion.h2>
+          <motion.div 
+            className="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8"
+            variants={containerVariants}
+          >
+            {features.map((feature, index) => (
+              <motion.div 
+                key={index} 
+                className="flex items-start p-6 bg-white dark:bg-slate-800 rounded-lg shadow-md hover:shadow-lg transition-shadow"
+                variants={itemVariants}
+              >
+                <div className="mr-4 flex-shrink-0 p-2.5 bg-teal-100 dark:bg-teal-900/50 rounded-lg">
+                  {feature.icon}
+                </div>
+                <div>
+                  <h3 className="text-lg font-semibold mb-2 text-slate-700 dark:text-slate-200">{feature.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">{feature.description}</p>
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* App Download Section */}
+      <section className="py-16 md:py-24 bg-white dark:bg-slate-900">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <motion.div
+            className="bg-white dark:bg-slate-800 p-6 md:p-8 lg:p-12 rounded-xl shadow-lg border border-slate-200 dark:border-slate-700 max-w-3xl mx-auto"
+            variants={itemVariants}
+          >
+            <h3 className="text-2xl md:text-3xl font-semibold mb-8 text-center text-slate-800 dark:text-slate-100">
+              {messages.downloadApp}
+            </h3>
+            
+            <div className="flex flex-col sm:flex-row justify-center items-center gap-8 md:gap-16">
+              {/* Android QR */}
+              <motion.div
+                className="flex flex-col items-center text-center"
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              >
+                <div className="flex items-center justify-center w-12 h-12 bg-green-100 dark:bg-green-900/50 rounded-full mb-3 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-600 dark:text-green-400">
+                    <path d="M5 12V6.5a2.5 2.5 0 0 1 5 0V12"></path><path d="M14 12V6.5a2.5 2.5 0 0 1 5 0V12"></path><path d="M12 8v13"></path><path d="M5 16v0a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v0"></path>
+                  </svg>
+                </div>
+                <p className="mb-3 text-base font-medium text-slate-700 dark:text-slate-300">Android App</p>
+                <motion.div 
+                  className="bg-white p-3 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                  <QRCodeCanvas 
+                    value="https://play.google.com/store/apps/details?id=com.roaport.app" 
+                    size={140}
+                    fgColor="#1E293B"
+                    bgColor="#FFFFFF"
+                    includeMargin={true}
+                    level="M"
+                  />
+                </motion.div>
+              </motion.div>
+              
+              {/* iOS QR */}
+              <motion.div
+                className="flex flex-col items-center text-center"
+                whileHover={{ y: -5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 15 }}
+              >
+                <div className="flex items-center justify-center w-12 h-12 bg-sky-100 dark:bg-sky-900/50 rounded-full mb-3 shadow-sm">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-sky-600 dark:text-sky-400">
+                     <path d="M12 2c.93 0 1.51.65 1.59 1.5 0 0 .15 1.5-.42 2-1.17 1-2.34 0-3.75 1.11-.83.62-.92 1.94-.92 1.94C7.43 4.71 10.5 2 12 2Z"></path><path d="M12 7c2.21 0 4 1.79 4 4v10c0 .55-.45 1-1 1H9c-.55 0-1-.45-1-1V11c0-2.21 1.79-4 4-4Z"></path>
+                  </svg>
+                </div>
+                <p className="mb-3 text-base font-medium text-slate-700 dark:text-slate-300">iOS App</p>
+                <motion.div 
+                  className="bg-white p-3 rounded-lg shadow-md border border-slate-200 dark:border-slate-700 hover:shadow-lg transition-all"
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 10 }}
+                >
+                   <QRCodeCanvas 
+                    value="https://apps.apple.com/app/roaport/id123456789" 
+                    size={140}
+                    fgColor="#1E293B"
+                    bgColor="#FFFFFF"
+                    includeMargin={true}
+                    level="M"
+                  />
+                </motion.div>
+              </motion.div>
+            </div>
+            
+            <p className="text-sm text-slate-600 dark:text-slate-400 text-center mt-8">
+              {messages.scanToDownload}
+            </p>
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="pt-16 pb-8 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
                 <Image
                   src="/roaport-logo.svg"
                   alt="ROAPORT Logo"
-                  width={40}
-                  height={40}
+                  width={36}
+                  height={36}
                   className="object-contain"
                   unoptimized
-                  loader={({ src }) => {
-                    return src;
-                  }}
+                  loader={({ src }) => src}
                 />
-                <span className="font-semibold text-xl bg-clip-text text-transparent bg-gradient-to-r from-primary to-primary/70">ROAPORT</span>
+                <span className="font-semibold text-lg text-blue-600 dark:text-blue-400">ROAPORT</span>
               </div>
-              <p className="text-muted-foreground mb-6 max-w-md">
+              <p className="text-slate-600 dark:text-slate-400 mb-6 max-w-md text-sm">
                 Making our roads safer by enabling citizens to report infrastructure issues quickly and efficiently.
               </p>
-              <div className="flex space-x-4">
-                <a href="#" className="p-2 rounded-full bg-secondary/20 text-muted-foreground hover:text-primary hover:bg-secondary/30 transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path>
-                  </svg>
-                </a>
-                <a href="#" className="p-2 rounded-full bg-secondary/20 text-muted-foreground hover:text-primary hover:bg-secondary/30 transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path>
-                  </svg>
-                </a>
-                <a href="#" className="p-2 rounded-full bg-secondary/20 text-muted-foreground hover:text-primary hover:bg-secondary/30 transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-                  </svg>
-                </a>
-              </div>
             </div>
 
             <div>
-              <h3 className="font-medium text-base mb-4">Quick Links</h3>
-              <ul className="space-y-3">
-                <li>
-                  <a href={`/${locale}/reports`} className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                    Reports
-                  </a>
-                </li>
-                <li>
-                  <a href={`/${locale}/map`} className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                    Map
-                  </a>
-                </li>
-                <li>
-                  <a href={`/${locale}/scoreboard`} className="text-muted-foreground hover:text-primary transition-colors flex items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                    Scoreboard
-                  </a>
-                </li>
+              <h3 className="font-medium text-sm uppercase tracking-wider mb-4 text-slate-700 dark:text-slate-300">Quick Links</h3>
+              <ul className="space-y-2.5">
+                <li><a href={`/${locale}/reports`} className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Reports</a></li>
+                <li><a href={`/${locale}/map`} className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Map</a></li>
+                <li><a href={`/${locale}/scoreboard`} className="text-sm text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Scoreboard</a></li>
               </ul>
             </div>
 
             <div>
-              <h3 className="font-medium text-base mb-4">Contact</h3>
-              <ul className="space-y-3 text-muted-foreground">
-                <li className="flex items-center gap-2 hover:text-foreground transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
-                  </svg>
-                  <span>+1 (555) 123-4567</span>
-                </li>
-                <li className="flex items-center gap-2 hover:text-foreground transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <rect width="20" height="16" x="2" y="4" rx="2"></rect>
-                    <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
-                  </svg>
-                  <span>support@roaport.com</span>
-                </li>
-                <li className="flex items-center gap-2 hover:text-foreground transition-colors">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"></path>
-                    <circle cx="12" cy="10" r="3"></circle>
-                  </svg>
-                  <span>123 Road Safety Street, City</span>
+              <h3 className="font-medium text-sm uppercase tracking-wider mb-4 text-slate-700 dark:text-slate-300">Contact</h3>
+              <ul className="space-y-2.5">
+                <li>
+                  <a href="mailto:support@roaport.com" className="text-sm flex items-center gap-2 text-slate-600 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                    <Edit3 size={14} />
+                    <span>support@roaport.com</span>
+                  </a>
                 </li>
               </ul>
             </div>
           </div>
 
-          <div className="pt-8 border-t border-border/30 flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">
+          <div className="pt-8 border-t border-slate-200 dark:border-slate-700 flex flex-col md:flex-row justify-between items-center gap-4">
+            <p className="text-xs text-slate-500 dark:text-slate-400">
               © {new Date().getFullYear()} ROAPORT. All rights reserved.
             </p>
-            <div className="flex gap-6 text-sm">
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Privacy Policy</a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Terms of Service</a>
-              <a href="#" className="text-muted-foreground hover:text-primary transition-colors">Cookie Policy</a>
+            <div className="flex gap-6">
+              <a href="#" className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Privacy Policy</a>
+              <a href="#" className="text-xs text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors">Terms of Service</a>
             </div>
           </div>
         </div>
       </footer>
-    </>
+    </div>
   );
 }

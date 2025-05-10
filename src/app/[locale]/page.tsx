@@ -21,11 +21,30 @@ export default async function Home({
     viewReports: messages.Landing.viewReports || "View Reports",
     exploreMap: messages.Landing.exploreMap || "Explore Map",
     downloadApp: messages.Landing.downloadApp || "Download Our Mobile App",
-    scanToDownload: messages.Landing.scanToDownload || "Scan QR code with your phone camera to download the app"
+    scanToDownload: messages.Landing.scanToDownload || "Scan QR code with your phone camera to download the app",
+    // Add missing required properties with default values
+    howItWorks: "How Roaport Works",
+    step1Title: "Snap & Send",
+    step1Description: "Easily report hazards using your phone's camera and GPS.",
+    step2Title: "AI Verification",
+    step2Description: "Our smart system quickly verifies the legitimacy of reports.",
+    step3Title: "Track Progress",
+    step3Description: "See real-time updates as authorities address the issue.",
+    step4Title: "Safer Communities",
+    step4Description: "Contribute to making your city's infrastructure better for everyone.",
+    featuresTitle: "Why Choose Roaport?",
+    feature1Title: "Effortless Reporting",
+    feature1Description: "Submit hazard reports in seconds with our intuitive mobile app.",
+    feature2Title: "Transparent Tracking",
+    feature2Description: "View all reported hazards on a public map and monitor their status.",
+    feature3Title: "AI-Powered Accuracy",
+    feature3Description: "Machine learning helps ensure reports are genuine and correctly categorized.",
+    feature4Title: "Community Driven",
+    feature4Description: "Be part of the solution for safer roads and public spaces."
   };
   
   return (
-    <main className="min-h-screen bg-background flex flex-col relative">
+    <main className="min-h-screen bg-background">
       {/* Background decoration */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-primary/5 rounded-full blur-3xl transform translate-x-1/3 -translate-y-1/4"></div>
@@ -34,12 +53,10 @@ export default async function Home({
       </div>
       
       {/* Content */}
-      <div className="container mx-auto px-4 py-16 md:py-28 flex-grow relative z-10">
-        <LandingPageContent 
-          messages={landingMessages} 
-          locale={locale}
-        />
-      </div>
+      <LandingPageContent 
+        messages={landingMessages} 
+        locale={locale}
+      />
     </main>
   )
 } 
