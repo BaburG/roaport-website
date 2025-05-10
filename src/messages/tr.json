@@ -16,7 +16,25 @@
     "viewReports": "Bildirimleri Görüntüle",
     "exploreMap": "Haritayı Keşfet",
     "downloadApp": "Mobil Uygulamamızı İndir",
-    "scanToDownload": "Uygulamayı indirmek için QR kodunu telefonunuzun kamerasıyla tarayın"
+    "scanToDownload": "Uygulamayı indirmek için QR kodunu telefonunuzun kamerasıyla tarayın",
+    "howItWorks": "Roaport Nasıl Çalışır",
+    "step1Title": "Çek ve Gönder",
+    "step1Description": "Telefonunuzun kamerası ve GPS'ini kullanarak tehlikeleri kolayca bildirin.",
+    "step2Title": "Yapay Zeka Doğrulaması",
+    "step2Description": "Akıllı sistemimiz bildirimlerin doğruluğunu hızlıca kontrol eder.",
+    "step3Title": "İlerlemeyi Takip Et",
+    "step3Description": "Yetkililerin sorunu çözmesiyle ilgili gerçek zamanlı güncellemeleri görün.",
+    "step4Title": "Daha Güvenli Topluluklar",
+    "step4Description": "Şehrinizin altyapısını herkes için daha iyi hale getirmeye katkıda bulunun.",
+    "featuresTitle": "Neden Roaport?",
+    "feature1Title": "Kolay Bildirim",
+    "feature1Description": "Sezgisel mobil uygulamamızla saniyeler içinde tehlike bildirimi yapın.",
+    "feature2Title": "Şeffaf Takip",
+    "feature2Description": "Bildirilen tüm tehlikeleri genel haritada görün ve durumlarını izleyin.",
+    "feature3Title": "Yapay Zeka Destekli Doğruluk",
+    "feature3Description": "Makine öğrenimi, bildirimlerin gerçek ve doğru kategorize edildiğinden emin olmanıza yardımcı olur.",
+    "feature4Title": "Topluluk Odaklı",
+    "feature4Description": "Daha güvenli yollar ve kamusal alanlar için çözümün bir parçası olun."
   },
   "HomePage": {
     "title": "Yüklenen Görseller"

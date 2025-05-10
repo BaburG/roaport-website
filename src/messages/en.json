@@ -16,7 +16,25 @@
     "viewReports": "View Reports",
     "exploreMap": "Explore Map",
     "downloadApp": "Download Our Mobile App",
-    "scanToDownload": "Scan QR code with your phone camera to download the app"
+    "scanToDownload": "Scan QR code with your phone camera to download the app",
+    "howItWorks": "How Roaport Works",
+    "step1Title": "Snap & Send",
+    "step1Description": "Easily report hazards using your phone's camera and GPS.",
+    "step2Title": "AI Verification",
+    "step2Description": "Our smart system quickly verifies the legitimacy of reports.",
+    "step3Title": "Track Progress",
+    "step3Description": "See real-time updates as authorities address the issue.",
+    "step4Title": "Safer Communities",
+    "step4Description": "Contribute to making your city's infrastructure better for everyone.",
+    "featuresTitle": "Why Choose Roaport?",
+    "feature1Title": "Effortless Reporting",
+    "feature1Description": "Submit hazard reports in seconds with our intuitive mobile app.",
+    "feature2Title": "Transparent Tracking",
+    "feature2Description": "View all reported hazards on a public map and monitor their status.",
+    "feature3Title": "AI-Powered Accuracy",
+    "feature3Description": "Machine learning helps ensure reports are genuine and correctly categorized.",
+    "feature4Title": "Community Driven",
+    "feature4Description": "Be part of the solution for safer roads and public spaces."
   },
   "HomePage": {
     "title": "Uploaded Images"

@@ -2,12 +2,12 @@
 
 import { QRCodeCanvas } from 'qrcode.react';
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"; // Added Card components
+
 import { motion } from "framer-motion";
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Image from 'next/image';
-import { MapPin, Smartphone, CheckCircle, ShieldCheck, Users, Send, Search, Bell, Edit3, BarChart2 } from 'lucide-react'; // Example icons
-import { useTheme } from "next-themes";
+import { MapPin, Smartphone, CheckCircle, ShieldCheck, Users, Send, Search, Edit3, BarChart2 } from 'lucide-react'; // Example icons
+
 
 // Animation variants (re-using yours)
 const containerVariants = {
@@ -52,31 +52,8 @@ interface LandingPageContentProps {
   locale: string;
 }
 
-// Placeholder for new messages if not passed
-const defaultMessages = {
-  howItWorks: "How Roaport Works",
-  step1Title: "Snap & Send",
-  step1Description: "Easily report hazards using your phone's camera and GPS.",
-  step2Title: "AI Verification",
-  step2Description: "Our smart system quickly verifies the legitimacy of reports.",
-  step3Title: "Track Progress",
-  step3Description: "See real-time updates as authorities address the issue.",
-  step4Title: "Safer Communities",
-  step4Description: "Contribute to making your city's infrastructure better for everyone.",
-  featuresTitle: "Why Choose Roaport?",
-  feature1Title: "Effortless Reporting",
-  feature1Description: "Submit hazard reports in seconds with our intuitive mobile app.",
-  feature2Title: "Transparent Tracking",
-  feature2Description: "View all reported hazards on a public map and monitor their status.",
-  feature3Title: "AI-Powered Accuracy",
-  feature3Description: "Machine learning helps ensure reports are genuine and correctly categorized.",
-  feature4Title: "Community Driven",
-  feature4Description: "Be part of the solution for safer roads and public spaces.",
-};
-
-
 export function LandingPageContent({ messages: propMessages, locale }: LandingPageContentProps) {
-  const messages = { ...defaultMessages, ...propMessages };
+  const messages = propMessages;
 
   const howItWorksSteps = [
     { icon: <Send className="w-8 h-8 text-blue-600" />, title: messages.step1Title, description: messages.step1Description },
