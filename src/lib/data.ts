@@ -13,7 +13,7 @@ function transformReport(report: PrismaReport): ReportItem {
   
   // Construct imageUrl, assuming file_name is just the name and needs a path prefix
   // Adjust this logic if your file_name already includes the full path or needs different handling
-  const imageUrl = report.bucket_name && report.file_name ? `/uploads/${report.bucket_name}/${report.file_name}` : '/placeholder.svg';
+  const imageUrl = report.file_name ? `https://img.roaport.com/${report.file_name}` : '/placeholder.svg';
   
   const location: Location = {
     latitude: report.latitude,
