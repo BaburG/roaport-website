@@ -90,7 +90,7 @@ export function LandingPageContent({ messages: propMessages, locale }: LandingPa
                   whileHover={{ rotate: 5, scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                 >
-                  {/*<Image
+                  {<Image
                     src="/roaport-logo.svg"
                     alt="ROAPORT Logo"
                     width={64}
@@ -98,10 +98,10 @@ export function LandingPageContent({ messages: propMessages, locale }: LandingPa
                     className="w-full h-full"
                     unoptimized
                     priority
-                  /> */}
+                  /> }
                 </motion.div>
                 <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight">
-                  Urban Hazard Report
+                  Roaport
                 </h1>
               </div>
 
