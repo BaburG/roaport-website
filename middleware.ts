@@ -19,8 +19,23 @@ function getLocale(request: NextRequest) {
 }
 
 export function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
+  const { pathname, hostname } = request.nextUrl;
   
+  // Handle admin subdomain
+  if (pathname.startsWith('/statistics')) {
+    // If not on admin subdomain, redirect to admin subdomain
+    if (!hostname.startsWith('admin.')) {
+      const url = request.nextUrl.clone();
+      url.hostname = `admin.${hostname}`;
+      return NextResponse.redirect(url);
+    }
+  }
+
+  // Skip localization for admin routes
+  if (pathname.startsWith('/admin')) {
+    return NextResponse.next();
+  }
+
   // Exclude paths that shouldn't be internationalized
   if (
     pathname.startsWith('/_next') ||

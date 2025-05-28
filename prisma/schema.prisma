@@ -35,3 +35,43 @@ model reports {
   @@map("reports")
 }
 
+enum ReportType {
+  pothole
+  sign
+  sidewalk
+  other
+}
+
+enum ReportStatus {
+  pending_verification
+  ML_verified
+  pending_human_verification
+  Verified
+  in_provision
+  repaired
+}
+
+enum VerifiedBy {
+  human
+  ai
+}
+
+model reports_prod {
+  id            Int           @id @default(autoincrement()) @map("Id")
+  userId        String        @db.Uuid @map("Userid")
+  longitude     Float         @map("Long")
+  latitude      Float         @map("Lat")
+  bucket_name   String?       @db.VarChar(255)
+  file_name     String?       @db.VarChar(255)
+  created_at    DateTime      @default(now()) @map("Created_at")
+  updated_at    DateTime?     @map("Updated_at")
+  deleted_at    DateTime?     @map("Deleted_at")
+  type          ReportType    @map("Type")
+  status        ReportStatus  @map("Status")
+  verified_at   DateTime?     @map("Verified_at")
+  verified_by   VerifiedBy?   @map("Verified_by")
+  detail        String?       @db.Text @map("Detail")
+
+  @@map("reports_prod")
+}
+
