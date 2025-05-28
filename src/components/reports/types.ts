@@ -1,11 +1,10 @@
 export type VerificationStatus =
   | "verified"
-  | "verified_by_ml"
-  | "waiting_ml_verification"
-  | "waiting_human_verification"
-  | "rejected"
+  | "pending_verification"
 
-export type ReportStatus = "verified" | "in_provision" | "fixed"
+export type ReportStatus =
+  | "fixed"
+  | "pending"
 
 export interface Location {
   latitude: number
@@ -21,4 +20,7 @@ export interface ReportItem {
   verification: VerificationStatus
   status: ReportStatus
   description?: string
+  name: string
+  type?: string
+  username?: string
 }

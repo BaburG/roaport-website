@@ -3,49 +3,24 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Legend, ResponsiveContainer } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
-interface UserEngagementChartProps {
-  timeRange: string
+interface UserEngagementDataItem {
+  name: string; // e.g., "Jan", "Feb" or "Week 1", "Mon"
+  users: number;
+  reports: number;
 }
 
-export default function UserEngagementChart({ timeRange }: UserEngagementChartProps) {
-  // Generate sample data based on the selected time range
-  const getData = () => {
-    if (timeRange === "week") {
-      return [
-        { name: "Mon", users: 120, reports: 215 },
-        { name: "Tue", users: 132, reports: 251 },
-        { name: "Wed", users: 101, reports: 178 },
-        { name: "Thu", users: 134, reports: 234 },
-        { name: "Fri", users: 190, reports: 327 },
-        { name: "Sat", users: 230, reports: 402 },
-        { name: "Sun", users: 210, reports: 375 },
-      ]
-    } else if (timeRange === "month") {
-      return [
-        { name: "Week 1", users: 720, reports: 1245 },
-        { name: "Week 2", users: 832, reports: 1451 },
-        { name: "Week 3", users: 901, reports: 1678 },
-        { name: "Week 4", users: 934, reports: 1734 },
-      ]
-    } else {
-      return [
-        { name: "Jan", users: 2720, reports: 5245 },
-        { name: "Feb", users: 2832, reports: 5451 },
-        { name: "Mar", users: 3901, reports: 7678 },
-        { name: "Apr", users: 3934, reports: 7734 },
-        { name: "May", users: 4120, reports: 8215 },
-        { name: "Jun", users: 4532, reports: 9251 },
-        { name: "Jul", users: 4301, reports: 8978 },
-        { name: "Aug", users: 4534, reports: 9234 },
-        { name: "Sep", users: 4890, reports: 10327 },
-        { name: "Oct", users: 5230, reports: 11402 },
-        { name: "Nov", users: 5410, reports: 11875 },
-        { name: "Dec", users: 5650, reports: 12450 },
-      ]
-    }
-  }
+interface UserEngagementChartProps {
+  // timeRange: string // Removed timeRange
+  data: UserEngagementDataItem[]; // Accept array of { name: string, users: number, reports: number }
+}
 
-  const data = getData()
+// export default function UserEngagementChart({ timeRange }: UserEngagementChartProps) { // Old signature
+export default function UserEngagementChart({ data }: UserEngagementChartProps) { // New signature
+  // const data = getData() // Removed old data fetching
+
+  if (!data || data.length === 0) {
+    return <div className="w-full h-[400px] flex items-center justify-center text-muted-foreground">No data available for user engagement.</div>;
+  }
 
   return (
     <div className="w-full h-[400px]">
@@ -53,17 +28,17 @@ export default function UserEngagementChart({ timeRange }: UserEngagementChartPr
         config={{
           users: {
             label: "Active Users",
-            color: "#4A90E2",
+            color: "#4A90E2", // Or use: "hsl(var(--chart-1))"
           },
           reports: {
             label: "Reports Submitted",
-            color: "#60D394",
+            color: "#60D394", // Or use: "hsl(var(--chart-2))"
           },
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={data}
+            data={data} // Use the passed-in data
             margin={{
               top: 20,
               right: 30,
@@ -81,11 +56,17 @@ export default function UserEngagementChart({ timeRange }: UserEngagementChartPr
               yAxisId="left"
               type="monotone"
               dataKey="users"
-              stroke="var(--color-users)"
+              stroke="var(--color-users)" // Ensure this CSS variable is defined if using it
               strokeWidth={2}
               activeDot={{ r: 8 }}
             />
-            <Line yAxisId="right" type="monotone" dataKey="reports" stroke="var(--color-reports)" strokeWidth={2} />
+            <Line 
+              yAxisId="right" 
+              type="monotone" 
+              dataKey="reports" 
+              stroke="var(--color-reports)" // Ensure this CSS variable is defined
+              strokeWidth={2} 
+            />
           </LineChart>
         </ResponsiveContainer>
       </ChartContainer>

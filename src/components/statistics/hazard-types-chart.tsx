@@ -3,24 +3,26 @@
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, ResponsiveContainer } from "recharts"
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
 
+interface HazardTypeDataItem {
+  name: string;
+  value: number;
+  fill?: string; // Optional fill color, can be added if needed by specific designs
+}
 interface HazardTypesChartProps {
-  timeRange: string
+  // timeRange: string // Removed timeRange
+  data: HazardTypeDataItem[]; // Accept array of { name: string, value: number, fill?: string }
 }
 
-export default function HazardTypesChart({ timeRange }: HazardTypesChartProps) {
-  // Sample data that changes based on the selected time range
-  const getData = () => {
-    const multiplier = timeRange === "week" ? 1 : timeRange === "month" ? 4 : 48
+// export default function HazardTypesChart({ timeRange }: HazardTypesChartProps) { // Old signature
+export default function HazardTypesChart({ data }: HazardTypesChartProps) { // New signature
+  // const data = getData() // Removed old data fetching
 
-    return [
-      { name: "Potholes", value: 42 * multiplier, fill: "#4A90E2" },
-      { name: "Damaged Signs", value: 28 * multiplier, fill: "#6BBDF0" },
-      { name: "Damaged Sidewalk", value: 22 * multiplier, fill: "#F5A623" },
-      { name: "Other", value: 16 * multiplier, fill: "#9013FE" },
-    ]
+  if (!data || data.length === 0) {
+    return <div className="w-full h-[300px] flex items-center justify-center text-muted-foreground">No data available for hazard types.</div>;
   }
 
-  const data = getData()
+  // Define a default fill color or use colors from data if provided
+  const defaultFillColor = "#4A90E2";
 
   return (
     <div className="w-full h-[300px]">
@@ -28,8 +30,10 @@ export default function HazardTypesChart({ timeRange }: HazardTypesChartProps) {
         config={{
           value: {
             label: "Count",
-            color: "#4A90E2",
+            color: defaultFillColor, // Use a consistent color or derive from data
           },
+          // If types have specific colors, they can be configured here, e.g.:
+          // Potholes: { label: "Potholes", color: "#someColor" },
         }}
       >
         <ResponsiveContainer width="100%" height="100%">
@@ -46,7 +50,14 @@ export default function HazardTypesChart({ timeRange }: HazardTypesChartProps) {
             <XAxis dataKey="name" />
             <YAxis />
             <ChartTooltip content={<ChartTooltipContent />} />
-            <Bar dataKey="value" fill="#4A90E2" radius={[4, 4, 0, 0]} />
+            <Bar dataKey="value" radius={[4, 4, 0, 0]}>
+              {/* If individual bar colors are needed based on data[i].fill */}
+              {/* {data.map((entry, index) => (<Cell key={`cell-${index}`} fill={entry.fill || defaultFillColor} />))} */}
+              {/* For a single color bar chart, just set fill on <Bar> */}
+            </Bar>
+            {/* Ensure the <Bar> component has a fill. It can be static or dynamic per bar. */}
+            {/* If using a single color for all bars: */}
+            <Bar dataKey="value" fill={defaultFillColor} radius={[4, 4, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </ChartContainer>

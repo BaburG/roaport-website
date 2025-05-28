@@ -1,12 +1,16 @@
 import type { Metadata } from "next"
 import StatisticsOverview from "@/components/statistics/statistics-overview"
+import { fetchReportsFromDB } from "@/lib/data"; // Import data fetching function
 
 export const metadata: Metadata = {
   title: "Public Statistics | Roaport",
   description: "Key performance indicators showcasing the effectiveness of our road hazard reporting system.",
 }
 
-export default function StatisticsPage() {
+// Make the component async to fetch data
+export default async function StatisticsPage() {
+  const reports = await fetchReportsFromDB(); // Fetch reports
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -16,7 +20,8 @@ export default function StatisticsPage() {
           engagement.
         </p>
       </div>
-      <StatisticsOverview />
+      {/* Pass fetched reports to StatisticsOverview */}
+      <StatisticsOverview reports={reports} /> 
     </div>
   )
 }

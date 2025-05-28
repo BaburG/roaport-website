@@ -10,7 +10,6 @@ const navItems = [
   { href: '/', label: { en: 'Homepage', tr: 'Ana Sayfa' } },
   { href: '/reports', label: { en: 'Reports', tr: 'Bildiriler' } },
   { href: '/map', label: { en: 'Map', tr: 'Harita' } },
-  { href: '/scoreboard', label: { en: 'Scoreboard', tr: 'Skor Tablosu' } },
 ];
 
 export function Header() {

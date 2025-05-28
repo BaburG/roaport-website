@@ -1,12 +1,15 @@
 import type { Metadata } from "next"
 import StatisticsOverview from "@/components/statistics/statistics-overview"
+import { fetchReportsFromDB } from "@/lib/data"
 
 export const metadata: Metadata = {
   title: "Admin Statistics | Roaport",
   description: "Administrative dashboard for monitoring and analyzing road hazard reporting system performance.",
 }
 
-export default function AdminStatisticsPage() {
+export default async function AdminStatisticsPage() {
+  const reports = await fetchReportsFromDB();
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="mb-8">
@@ -15,7 +18,7 @@ export default function AdminStatisticsPage() {
           Comprehensive administrative dashboard for monitoring system performance, user engagement, and detailed analytics.
         </p>
       </div>
-      <StatisticsOverview />
+      <StatisticsOverview reports={reports} />
     </div>
   )
 } 
