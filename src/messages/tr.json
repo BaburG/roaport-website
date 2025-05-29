@@ -68,5 +68,7 @@
   "ScoreboardPage": {
     "title": "Yükleme Skor Tablosu",
     "description": "En çok yükleme yapanları ve puanlarını görüntüleyin"
-  }
+  },
+  "title": "Tehlike Raporu",
+  "description": "Bölgenizdeki tehlikeleri raporlayın ve takip edin"
 } 
