@@ -1,5 +1,6 @@
 "use client";
 
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Sidebar } from "@/components/admin/sidebar";
@@ -10,17 +11,21 @@ export default function AdminLayoutClient({
 }: {
   children: React.ReactNode;
 }) {
+  const { data: session, status } = useSession();
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      const response = await fetch('/api/auth/admin/verify');
-      if (!response.ok) {
-        router.push('/admin/login');
-      }
-    };
-    checkAuth();
-  }, [router]);
+    if (status === 'loading') return;
+
+    const isAdmin = session?.user?.groups?.includes('admin');
+    if (!isAdmin) {
+      router.push('/admin/login');
+    }
+  }, [session, status, router]);
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="flex h-screen">
