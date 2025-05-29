@@ -1,51 +1,43 @@
 "use client"
 
-import Link from "next/link"
+import { signOut } from "next-auth/react"
+import { Button } from "@/components/ui/button"
 import { usePathname } from "next/navigation"
-import { cn } from "@/lib/utils"
-
-const menuItems = [
-  {
-    title: "Dashboard",
-    href: "/admin",
-    icon: "📊"
-  },
-  {
-    title: "Reports",
-    href: "/admin/reports",
-    icon: "📝"
-  },
-  {
-    title: "Statistics",
-    href: "/admin/statistics",
-    icon: "📈"
-  }
-]
+import Link from "next/link"
 
 export function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="w-64 bg-gray-100 dark:bg-gray-800 border-r">
-      <div className="p-4">
-        <h2 className="text-xl font-semibold mb-4">Admin Panel</h2>
+    <div className="flex flex-col h-full bg-white border-r">
+      <div className="flex-1 p-4">
         <nav className="space-y-2">
-          {menuItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-2 px-3 py-2 rounded-md transition-colors",
-                pathname === item.href
-                  ? "bg-gray-200 dark:bg-gray-700"
-                  : "hover:bg-gray-200 dark:hover:bg-gray-700"
-              )}
+          <Link href="/admin/statistics">
+            <Button
+              variant={pathname === "/admin/statistics" ? "default" : "ghost"}
+              className="w-full justify-start"
             >
-              <span>{item.icon}</span>
-              <span>{item.title}</span>
-            </Link>
-          ))}
+              Statistics
+            </Button>
+          </Link>
+          <Link href="/admin/reports">
+            <Button
+              variant={pathname === "/admin/reports" ? "default" : "ghost"}
+              className="w-full justify-start"
+            >
+              Reports
+            </Button>
+          </Link>
         </nav>
+      </div>
+      <div className="p-4 border-t">
+        <Button
+          variant="ghost"
+          className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+          onClick={() => signOut({ callbackUrl: "/admin/login" })}
+        >
+          Logout
+        </Button>
       </div>
     </div>
   )
