@@ -1,40 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
-export function useIsMobile(query: string = '(max-width: 768px)'): boolean {
+export function useMobile() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    if (typeof window === 'undefined') {
-      return;
-    }
-
-    const mediaQuery = window.matchMedia(query);
-    const handleChange = () => {
-      setIsMobile(mediaQuery.matches);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
 
-    // Initial check
-    handleChange();
-
-    // Listen for changes
-    try {
-        mediaQuery.addEventListener('change', handleChange);
-    } catch (e) {
-        // Safari < 14 uses deprecated addListener
-        mediaQuery.addListener(handleChange);
-    }
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
 
     return () => {
-        try {
-            mediaQuery.removeEventListener('change', handleChange);
-        } catch (e) {
-            // Safari < 14 uses deprecated removeListener
-            mediaQuery.removeListener(handleChange);
-        }
+      window.removeEventListener('resize', checkMobile);
     };
-  }, [query]);
+  }, []);
 
   return isMobile;
 } 

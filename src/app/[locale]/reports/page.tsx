@@ -1,42 +1,51 @@
-"use client"
-
-import React, { useEffect, useState } from 'react'
-import { Skeleton } from "@/components/ui/skeleton"
 import { Post } from "@/data/posts"
 import Image from 'next/image'
+import { Skeleton } from "@/components/ui/skeleton"
 
-export default function ReportsPage({ params }: { params: Promise<{ locale: string }> }) {
-  const [reports, setReports] = useState<Post[]>([]);
-  const [loading, setLoading] = useState(true);
-  const { locale } = React.use(params);
+export const dynamic = 'force-dynamic'
 
-  useEffect(() => {
-    async function fetchReports() {
-      try {
-        const response = await fetch('/api/posts');
-        if (response.ok) {
-          const data = await response.json();
-          setReports(data);
-        }
-      } catch (error) {
-        console.error("Failed to fetch reports:", error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    
-    fetchReports();
-  }, []);
+function TableSkeleton() {
+  return (
+    <div className="space-y-4">
+      <Skeleton className="h-10 w-full" />
+      <Skeleton className="h-20 w-full" />
+      <Skeleton className="h-20 w-full" />
+      <Skeleton className="h-20 w-full" />
+    </div>
+  )
+}
 
+export default async function ReportsPage({
+  params
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  
   const titles: Record<string, string> = {
     en: "Hazard Reports",
     tr: "Tehlike Bildirimleri"
   };
 
+  let reports: Post[] = [];
+  try {
+    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
+    const response = await fetch(`${apiUrl}/api/posts`, {
+      next: {
+        revalidate: 60 // Revalidate every 60 seconds
+      }
+    });
+    if (response.ok) {
+      reports = await response.json();
+    }
+  } catch (error) {
+    console.error("Failed to fetch reports:", error);
+  }
+
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-8">{titles[locale]}</h1>
-      {loading ? (
+      {reports.length === 0 ? (
         <TableSkeleton />
       ) : (
         <div className="w-full overflow-auto">
@@ -51,7 +60,7 @@ export default function ReportsPage({ params }: { params: Promise<{ locale: stri
                 <th className="px-6 py-3 text-left text-sm font-medium">Status</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody>
               {reports.map((report) => (
                 <tr key={report.id}>
                   <td className="px-6 py-4 whitespace-nowrap">
@@ -83,17 +92,6 @@ export default function ReportsPage({ params }: { params: Promise<{ locale: stri
           </table>
         </div>
       )}
-    </div>
-  )
-}
-
-function TableSkeleton() {
-  return (
-    <div className="space-y-4">
-      <Skeleton className="h-10 w-full" />
-      <Skeleton className="h-20 w-full" />
-      <Skeleton className="h-20 w-full" />
-      <Skeleton className="h-20 w-full" />
     </div>
   )
 } 
