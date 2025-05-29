@@ -1,12 +1,16 @@
-import type { Metadata, Viewport } from "next";
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/header";
-import { getTranslations, type Locale } from '@/i18n';
+import { getTranslations } from 'next-intl/server';
 import { NextIntlClientProvider } from "next-intl";
 import { notFound } from "next/navigation";
 import { NextAuthProvider } from "@/components/providers/next-auth-provider";
-import { getMessages } from "next-intl/server";
+import { getMessages, type Locale } from "./i18n.config";
+import { Toaster } from "@/components/ui/toaster";
+import { ThemeProvider } from "@/components/theme-provider";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { locales } from "./i18n.config";
 
 // Font configuration
 const inter = Inter({
@@ -24,21 +28,17 @@ export const viewport: Viewport = {
   ],
 };
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
-  const t = await getTranslations(locale as Locale);
-
+  const t = await getTranslations({ locale });
+  
   return {
     title: {
       template: "%s | Hazard Report",
-      default: t("metadata.title"),
+      default: t("title"),
     },
-    description: t("metadata.description"),
-  };
+    description: t("description"),
+  }
 }
 
 export default async function LocaleLayout({
@@ -48,12 +48,13 @@ export default async function LocaleLayout({
   children: React.ReactNode
   params: Promise<{ locale: string }>
 }) {
-  const { locale } = await params
+  const { locale } = await params;
+  if (!locales.includes(locale as Locale)) notFound()
+
   let messages
   try {
     messages = await getMessages({ locale })
-  } catch (error) {
-    console.error("Failed to load messages:", error)
+  } catch {
     notFound()
   }
 
@@ -61,12 +62,22 @@ export default async function LocaleLayout({
     <html lang={locale} className={inter.className} suppressHydrationWarning>
       <body className="antialiased" suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <NextAuthProvider>
-            <div>
-              <Header />
-              {children}
-            </div>
-          </NextAuthProvider>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <SidebarProvider>
+              <NextAuthProvider>
+                <div>
+                  <Header />
+                  {children}
+                </div>
+              </NextAuthProvider>
+              <Toaster />
+            </SidebarProvider>
+          </ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>

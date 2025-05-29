@@ -68,5 +68,7 @@
   "ScoreboardPage": {
     "title": "Upload Scoreboard",
     "description": "View the top uploaders and their scores"
-  }
+  },
+  "title": "Hazard Report",
+  "description": "Report and track hazards in your area"
 } 
