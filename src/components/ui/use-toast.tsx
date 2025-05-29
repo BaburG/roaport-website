@@ -1,6 +1,5 @@
 'use client';
 
-// Inspired by react-hot-toast library
 import * as React from "react";
 
 type ToastActionElement = React.ReactElement<typeof ToastAction>;
@@ -16,10 +15,8 @@ interface ToastProps {
   onAutoClose?: (toast: ToastProps) => void;
 }
 
-// Ensure ToastActionProps correctly extends React.ButtonHTMLAttributes
 interface ToastActionProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   altText: string;
-  // children is already part of React.ButtonHTMLAttributes
 }
 
 const ToastAction = React.forwardRef<HTMLButtonElement, ToastActionProps>(
@@ -34,7 +31,7 @@ const ToastAction = React.forwardRef<HTMLButtonElement, ToastActionProps>(
 ToastAction.displayName = "ToastAction";
 
 const TOAST_LIMIT = 3;
-const TOAST_REMOVE_DELAY = 1000000; // This is a very long delay, essentially infinite for UI purposes
+const TOAST_REMOVE_DELAY = 1000000;
 
 type ToasterToast = ToastProps & {
   id: string;
@@ -42,25 +39,23 @@ type ToasterToast = ToastProps & {
   description?: React.ReactNode;
   action?: ToastActionElement;
   variant?: 'default' | 'destructive';
-  open?: boolean; // Added for managing visibility state
-  onOpenChange?: (open: boolean) => void; // Added for managing visibility state
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 };
 
-const actionTypes = {
-  ADD_TOAST: "ADD_TOAST",
-  UPDATE_TOAST: "UPDATE_TOAST",
-  DISMISS_TOAST: "DISMISS_TOAST",
-  REMOVE_TOAST: "REMOVE_TOAST",
-} as const;
+type ActionType = {
+  ADD_TOAST: "ADD_TOAST";
+  UPDATE_TOAST: "UPDATE_TOAST";
+  DISMISS_TOAST: "DISMISS_TOAST";
+  REMOVE_TOAST: "REMOVE_TOAST";
+};
 
 let count = 0;
 
 function genId() {
-  count = (count + 1) % Number.MAX_SAFE_INTEGER; // Use Number.MAX_SAFE_INTEGER
+  count = (count + 1) % Number.MAX_SAFE_INTEGER;
   return count.toString();
 }
-
-type ActionType = typeof actionTypes;
 
 type Action =
   | { type: ActionType["ADD_TOAST"]; toast: ToasterToast }
@@ -177,7 +172,7 @@ function toast(props: Toast) {
   };
 }
 
-function useToast() {
+export function useToast() {
   const [state, setState] = React.useState<State>(memoryState);
 
   React.useEffect(() => {
@@ -197,5 +192,5 @@ function useToast() {
   };
 }
 
-export { useToast, toast, ToastAction };
+export { toast, ToastAction };
 export type { ToastProps, ToastActionProps, ToasterToast as ToastType }; 

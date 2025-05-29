@@ -1,9 +1,9 @@
 import type { Metadata } from "next"
-import { Geist } from "next/font/google"
+import { Inter } from "next/font/google"
 import "../globals.css"
-import AdminNav from "./admin-nav"
+import AdminLayoutClient from "./admin-layout-client"
 
-const geist = Geist({
+const inter = Inter({
   subsets: ["latin"],
 })
 
@@ -18,20 +18,8 @@ export default function AdminLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en">
-      <body className={`${geist.className} antialiased`}>
-        <div className="min-h-screen bg-gray-50">
-          <nav className="bg-white border-b border-gray-200">
-            <div className="container mx-auto px-4 py-4">
-              <div className="flex items-center justify-between">
-                <h1 className="text-xl font-semibold text-[#1A2E4C]">Hazard Report Admin</h1>
-                <AdminNav />
-              </div>
-            </div>
-          </nav>
-          <main>{children}</main>
-        </div>
-      </body>
-    </html>
+    <div className={inter.className}>
+      <AdminLayoutClient>{children}</AdminLayoutClient>
+    </div>
   )
 } 

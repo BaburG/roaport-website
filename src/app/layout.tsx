@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { Inter } from "next/font/google";
+import { NextAuthProvider } from "@/components/providers/next-auth-provider";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Hazard Reports",
@@ -8,8 +12,14 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
-  return children;
+}) {
+  return (
+    <html lang="en" className={inter.className}>
+      <body className="antialiased">
+        <NextAuthProvider>{children}</NextAuthProvider>
+      </body>
+    </html>
+  );
 }

@@ -1,79 +1,74 @@
 import type { Metadata, Viewport } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "../globals.css";
 import { Header } from "@/components/header";
-import { getTranslations, locales, type Locale } from '@/i18n';
+import { getTranslations, type Locale } from '@/i18n';
+import { NextIntlClientProvider } from "next-intl";
+import { notFound } from "next/navigation";
+import { NextAuthProvider } from "@/components/providers/next-auth-provider";
+import { getMessages } from "next-intl/server";
 
-// Font configurations
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+// Font configuration
+const inter = Inter({
   subsets: ["latin"],
 });
 
 export function generateStaticParams() {
-  return locales.map(locale => ({ locale }));
+  return [{ locale: "en" }, { locale: "tr" }];
 }
 
-// Define viewport separately as recommended by Next.js
 export const viewport: Viewport = {
-  width: "device-width",
-  initialScale: 1,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
 };
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-  // Handle params as a promise
-  const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
-  const messages = await getTranslations(locale);
-  
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations(locale as Locale);
+
   return {
-    title: `ROAPORT - ${messages.Layout.title}`,
-    description: locale === 'en' 
-      ? "ROAPORT is an innovative road hazard reporting system that enables citizens to report infrastructure issues quickly and efficiently."
-      : "ROAPORT, vatandaşların yol tehlikelerini ve altyapı sorunlarını hızlı ve verimli bir şekilde bildirmelerini sağlayan yenilikçi bir platformdur.",
-    keywords: locale === 'en' 
-      ? "road hazards, infrastructure, reporting system, potholes, safety, ROAPORT"
-      : "yol tehlikeleri, altyapı, bildirim sistemi, çukurlar, güvenlik, ROAPORT",
-    authors: [{ name: "ROAPORT Team" }],
-    robots: "index, follow",
-    openGraph: {
-      type: "website",
-      title: `ROAPORT - ${messages.Layout.title}`,
-      description: locale === 'en'
-        ? "Report road hazards and infrastructure issues quickly and efficiently with ROAPORT."
-        : "ROAPORT ile yol tehlikelerini ve altyapı sorunlarını hızlı ve verimli bir şekilde bildirin.",
-      siteName: "ROAPORT",
+    title: {
+      template: "%s | Hazard Report",
+      default: t("metadata.title"),
     },
+    description: t("metadata.description"),
   };
 }
 
-export default async function RootLayout({
+export default async function LocaleLayout({
   children,
-  params,
-}: Readonly<{
-  children: React.ReactNode;
-  params: Promise<{ locale: string }>;
-}>) {
-  // Handle params as a promise
-  const resolvedParams = await params;
-  const locale = resolvedParams.locale;
+  params
+}: {
+  children: React.ReactNode
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  let messages
+  try {
+    messages = await getMessages({ locale })
+  } catch (error) {
+    console.error("Failed to load messages:", error)
+    notFound()
+  }
 
   return (
-    <html lang={locale} suppressHydrationWarning>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-        suppressHydrationWarning
-      >
-        <div>
-          <Header />
-          {children}
-        </div>
+    <html lang={locale} className={inter.className} suppressHydrationWarning>
+      <body className="antialiased" suppressHydrationWarning>
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <NextAuthProvider>
+            <div>
+              <Header />
+              {children}
+            </div>
+          </NextAuthProvider>
+        </NextIntlClientProvider>
       </body>
     </html>
-  );
+  )
 } 

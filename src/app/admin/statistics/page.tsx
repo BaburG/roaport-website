@@ -1,6 +1,8 @@
 import type { Metadata } from "next"
 import StatisticsOverview from "@/components/statistics/statistics-overview"
 import { fetchReportsFromDB } from "@/lib/data"
+import { getServerSession } from "next-auth"
+import { redirect } from "next/navigation"
 
 export const metadata: Metadata = {
   title: "Admin Statistics | Roaport",
@@ -8,6 +10,12 @@ export const metadata: Metadata = {
 }
 
 export default async function AdminStatisticsPage() {
+  const session = await getServerSession();
+
+  if (!session) {
+    redirect("/admin/login");
+  }
+
   const reports = await fetchReportsFromDB();
 
   return (

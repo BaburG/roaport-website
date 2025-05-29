@@ -3,15 +3,9 @@ import { LandingPageContent } from '@/components/LandingPageContent';
 
 export const dynamic = 'force-dynamic';
 
-export default async function Home({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}) {
-  // Handle params as a promise
-  const resolvedParams = await params;
-  const locale = resolvedParams.locale as Locale;
-  const messages = await getTranslations(locale);
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const messages = await getTranslations(locale as Locale);
   
   // Prepare landing page messages
   const landingMessages = {
