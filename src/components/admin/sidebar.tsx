@@ -1,12 +1,13 @@
 "use client"
 
-import { signOut } from "next-auth/react"
+import { signOut, useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { usePathname } from "next/navigation"
 import Link from "next/link"
 
 export function Sidebar() {
   const pathname = usePathname()
+  const { data: session } = useSession()
 
   return (
     <div className="flex flex-col h-full bg-white border-r">
@@ -30,15 +31,17 @@ export function Sidebar() {
           </Link>
         </nav>
       </div>
-      <div className="p-4 border-t">
-        <Button
-          variant="ghost"
-          className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
-          onClick={() => signOut({ callbackUrl: "/admin/login" })}
-        >
-          Logout
-        </Button>
-      </div>
+      {session && (
+        <div className="p-4 border-t">
+          <Button
+            variant="ghost"
+            className="w-full justify-start text-red-600 hover:text-red-700 hover:bg-red-50"
+            onClick={() => signOut({ callbackUrl: "/admin/login" })}
+          >
+            Logout
+          </Button>
+        </div>
+      )}
     </div>
   )
 } 

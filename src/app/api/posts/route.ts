@@ -1,12 +1,26 @@
 import { NextResponse } from "next/server";
-import { fetchPosts } from "@/lib/data";
+import { fetchPosts } from "@/lib/posts";
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const posts = await fetchPosts();
+    const { searchParams } = new URL(request.url);
+    const lat = searchParams.get('lat');
+    const lon = searchParams.get('lon');
+    const maxDistance = searchParams.get('maxDistance');
+    const verified = searchParams.get('verified') === 'true';
+
+    const posts = await fetchPosts(
+      lat ? parseFloat(lat) : undefined,
+      lon ? parseFloat(lon) : undefined,
+      maxDistance ? parseFloat(maxDistance) : 3,
+      verified
+    );
+
     return NextResponse.json(posts);
   } catch (error) {
-    console.error("Error fetching posts:", error);
-    return NextResponse.json({ error: "Failed to fetch posts" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to fetch posts", message: error }, 
+      { status: 500 }
+    );
   }
 }

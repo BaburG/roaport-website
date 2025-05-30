@@ -1,39 +1,69 @@
 "use client"
 
-import { useEffect } from "react"
+import { useEffect, useRef } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
 import { signIn, useSession } from "next-auth/react"
-import { toast } from "sonner"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useToast } from "@/components/ui/use-toast"
 
 export default function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { data: session, status } = useSession()
+  const { toast } = useToast()
   const callbackUrl = searchParams?.get("callbackUrl") || "/admin/statistics"
+  const error = searchParams?.get("error")
+  const hasShownError = useRef(false)
 
   useEffect(() => {
     if (status === "authenticated" && session) {
       console.log("User is authenticated, redirecting to:", callbackUrl)
+      toast({
+        title: "Giriş başarılı",
+        description: "Admin paneline yönlendiriliyorsunuz.",
+        variant: "default",
+      })
       router.replace(callbackUrl)
     }
-  }, [status, session, callbackUrl, router])
+  }, [status, session, callbackUrl, router, toast])
+
+  useEffect(() => {
+    const showErrorToast = () => {
+      if (error === "AccessDenied" && window.location.pathname === "/admin/login" && !hasShownError.current) {
+        console.log("toast geldi bro")
+        hasShownError.current = true
+        
+        const newUrl = window.location.pathname
+        window.history.replaceState({}, '', newUrl)
+        
+        setTimeout(() => {
+          toast({
+            title: "Erişim Reddedildi",
+            description: "Admin yetkisine sahip değilsiniz. Sadece admin rolüne sahip kullanıcılar giriş yapabilir.",
+            variant: "destructive",
+            duration: 5000,
+          })
+        }, 100)
+      }
+    }
+
+    showErrorToast()
+  }, [error, toast])
 
   const handleLogin = async () => {
     try {
-      const result = await signIn("keycloak", {
-        redirect: false,
+      await signIn("keycloak", {
         callbackUrl,
+        prompt: "login",
       })
-
-      if (result?.error) {
-        console.error("Sign in error:", result.error)
-        toast.error("Giriş başarısız oldu. Lütfen daha sonra tekrar deneyin.")
-      }
     } catch (error) {
       console.error("Login error:", error)
-      toast.error("Giriş başarısız oldu. Lütfen daha sonra tekrar deneyin.")
+      toast({
+        title: "Sistem Hatası",
+        description: "Giriş yapılırken beklenmeyen bir hata oluştu.",
+        variant: "destructive",
+      })
     }
   }
 
@@ -46,8 +76,8 @@ export default function LoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <Card className="w-[350px]">
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <Card className="w-full max-w-md">
         <CardHeader>
           <CardTitle>Admin Girişi</CardTitle>
           <CardDescription>
@@ -56,8 +86,8 @@ export default function LoginForm() {
         </CardHeader>
         <CardContent>
           <Button
-            className="w-full"
             onClick={handleLogin}
+            className="w-full"
           >
             Keycloak ile Giriş Yap
           </Button>
