@@ -15,7 +15,7 @@ export async function GET(request: Request) {
       maxDistance ? parseFloat(maxDistance) : 3,
       verified
     );
-
+    console.log(posts)
     return NextResponse.json(posts);
   } catch (error) {
     return NextResponse.json(
