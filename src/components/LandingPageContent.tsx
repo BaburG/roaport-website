@@ -70,7 +70,7 @@ export function LandingPageContent({ messages: propMessages, locale }: LandingPa
   ];
 
   return (
-    <div className="relative">
+    <div className="relative w-full">
       {/* Hero Section */}
       <motion.section
         className="relative py-16 md:py-24 lg:py-32 bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-800 dark:from-blue-700 dark:via-blue-800 dark:to-indigo-900 text-white overflow-hidden"
@@ -78,7 +78,7 @@ export function LandingPageContent({ messages: propMessages, locale }: LandingPa
         initial="hidden"
         animate="visible"
       >
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center"
             variants={itemVariants}
@@ -168,7 +168,7 @@ export function LandingPageContent({ messages: propMessages, locale }: LandingPa
 
       {/* How It Works Section */}
       <section className="py-16 md:py-24 bg-white dark:bg-slate-900">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
             className="text-3xl md:text-4xl font-bold text-center mb-12 lg:mb-16 text-slate-800 dark:text-slate-100"
             variants={itemVariants}
@@ -198,7 +198,7 @@ export function LandingPageContent({ messages: propMessages, locale }: LandingPa
       
       {/* Features Section */}
       <section className="py-16 md:py-24 bg-slate-50 dark:bg-slate-800/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.h2 
             className="text-3xl md:text-4xl font-bold text-center mb-12 lg:mb-16 text-slate-800 dark:text-slate-100"
             variants={itemVariants}
@@ -306,7 +306,7 @@ export function LandingPageContent({ messages: propMessages, locale }: LandingPa
 
       {/* Footer */}
       <footer className="pt-16 pb-8 border-t border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-12">
             <div className="md:col-span-2">
               <div className="flex items-center gap-3 mb-4">
