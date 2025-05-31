@@ -18,10 +18,10 @@ function decodeToken(token: string) {
 
 export async function GET(
     request: NextRequest,
-    context: { params: { id: string } }
+    { params }: { params: Promise<{ id: string }> }
 ) {
     try {
-        const { id: userId } = await Promise.resolve(context.params);
+        const { id: userId } = await params;
 
         const authHeader = request.headers.get('authorization');
         if (!authHeader || !authHeader.startsWith('Bearer ')) {
@@ -43,7 +43,6 @@ export async function GET(
         const limit = parseInt(searchParams.get('limit') || '10');
         const skip = (page - 1) * limit;
 
-        // Prisma sorgusu ile dene
         const reports = await prisma.reports.findMany({
             where: {
                 username: userId
@@ -55,6 +54,7 @@ export async function GET(
             }
         });
 
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const posts = (reports as any[]).map(report => ({
             id: report.id.toString(),
             name: report.name,
@@ -63,11 +63,12 @@ export async function GET(
             latitude: report.latitude,
             dateCreated: report.date_created ? new Date(report.date_created).toISOString() : "",
             type: report.type ?? "none",
-            status: report.status,
+            status: report.status ?? "PENDING",
             description: report.detail ?? "",
             verified: report.verified ? "true" : "false"
         }));
 
+        console.log('Sending response:', posts);
         return NextResponse.json(posts);
     } catch (error) {
         console.error('Error fetching user posts:', error);
