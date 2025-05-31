@@ -8,9 +8,9 @@ import { notFound } from "next/navigation";
 import { NextAuthProvider } from "@/components/providers/next-auth-provider";
 import { getMessages, type Locale } from "./i18n.config";
 import { Toaster } from "@/components/ui/toaster";
-import { ThemeProvider } from "@/components/theme-provider";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { locales } from "./i18n.config";
+import { ThemeWrapper } from "@/components/theme-wrapper";
 
 // Font configuration
 const inter = Inter({
@@ -26,6 +26,7 @@ export const viewport: Viewport = {
     { media: "(prefers-color-scheme: light)", color: "white" },
     { media: "(prefers-color-scheme: dark)", color: "black" },
   ],
+  colorScheme: "light dark"
 };
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
@@ -59,25 +60,22 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} className={inter.className} suppressHydrationWarning>
-      <body className="antialiased" suppressHydrationWarning>
+    <html lang={locale} suppressHydrationWarning>
+      <body className={inter.className} suppressHydrationWarning>
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <SidebarProvider>
-              <NextAuthProvider>
-                <div>
-                  <Header />
-                  {children}
-                </div>
-              </NextAuthProvider>
-              <Toaster />
-            </SidebarProvider>
-          </ThemeProvider>
+          <ThemeWrapper>
+            <div className="min-h-screen">
+              <SidebarProvider>
+                <NextAuthProvider>
+                  <div className="w-full">
+                    <Header />
+                    {children}
+                  </div>
+                </NextAuthProvider>
+                <Toaster />
+              </SidebarProvider>
+            </div>
+          </ThemeWrapper>
         </NextIntlClientProvider>
       </body>
     </html>
