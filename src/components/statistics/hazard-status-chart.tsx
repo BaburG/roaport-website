@@ -14,12 +14,22 @@ const statusConfig: Record<ReportStatus, { name: string; fill: string; chartLabe
   pending: { 
     name: "Pending", // Internal key from ReportStatus
     fill: "#F5A623", // Orange/Yellow for pending
-    chartLabel: "Pending Verification / Not Fixed" // Label for the chart
+    chartLabel: "Pending" // Label for the chart
+  },
+  in_provision: { 
+    name: "In Provision", // Internal key from ReportStatus
+    fill: "#3B82F6", // Blue for in provision
+    chartLabel: "In Provision" // Label for the chart
   },
   fixed: { 
     name: "Fixed", // Internal key from ReportStatus
     fill: "#60D394", // Green for fixed
-    chartLabel: "Fixed / Verified" // Label for the chart
+    chartLabel: "Fixed" // Label for the chart
+  },
+  rejected: { 
+    name: "Rejected", // Internal key from ReportStatus
+    fill: "#EF4444", // Red for rejected
+    chartLabel: "Rejected" // Label for the chart
   },
 };
 

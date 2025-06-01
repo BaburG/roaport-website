@@ -8,8 +8,33 @@ const prismaClient = new PrismaClient();
 
 // Helper to transform Prisma report to ReportItem
 function transformReport(report: PrismaReport): ReportItem {
-  const status: ReportStatus = report.verified ? 'fixed' : 'pending';
+  // Handle verification status based on the verified field
   const verification: VerificationStatus = report.verified ? 'verified' : 'pending_verification';
+  
+  // Handle status based on the status field, defaulting to pending if not set
+  let status: ReportStatus = 'pending';
+  // Safe access to status field using bracket notation and type assertion
+  const reportStatus = (report as Record<string, unknown>).status;
+  if (reportStatus && typeof reportStatus === 'string') {
+    const dbStatus = reportStatus.toLowerCase().replace(/\s+/g, '_');
+    switch (dbStatus) {
+      case 'fixed':
+      case 'resolved':
+        status = 'fixed';
+        break;
+      case 'in_provision':
+      case 'in provision':
+      case 'inprovision':
+        status = 'in_provision';
+        break;
+      case 'rejected':
+      case 'denied':
+        status = 'rejected';
+        break;
+      default:
+        status = 'pending';
+    }
+  }
   
   // Construct imageUrl, assuming file_name is just the name and needs a path prefix
   // Adjust this logic if your file_name already includes the full path or needs different handling

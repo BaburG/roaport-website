@@ -1,6 +1,7 @@
 import { Post } from "@/data/posts"
-import Image from 'next/image'
+import { Suspense } from 'react'
 import { Skeleton } from "@/components/ui/skeleton"
+import { ReportTable } from './report-table'
 
 export const dynamic = 'force-dynamic'
 
@@ -45,53 +46,9 @@ export default async function ReportsPage({
   return (
     <div className="container mx-auto py-10">
       <h1 className="text-4xl font-bold mb-8">{titles[locale]}</h1>
-      {reports.length === 0 ? (
-        <TableSkeleton />
-      ) : (
-        <div className="w-full overflow-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th className="px-6 py-3 text-left text-sm font-medium">Image</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Name</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Type</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Date</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Location</th>
-                <th className="px-6 py-3 text-left text-sm font-medium">Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {reports.map((report) => (
-                <tr key={report.id}>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="w-16 h-16 relative">
-                      <Image 
-                        src={report.imageUrl} 
-                        alt={report.name} 
-                        width={64}
-                        height={64}
-                        className="rounded-md object-cover w-full h-full"
-                        unoptimized
-                      />
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">{report.name}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">{report.type}</td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {new Date(report.dateCreated).toLocaleDateString(locale)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {report.latitude.toFixed(4)}, {report.longitude.toFixed(4)}
-                  </td>
-                  <td className="px-6 py-4 whitespace-nowrap">
-                    {report.verified ? 'Verified' : 'Pending'}
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <Suspense fallback={<TableSkeleton />}>
+        <ReportTable reports={reports} locale={locale} />
+      </Suspense>
     </div>
   )
 } 
