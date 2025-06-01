@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -17,6 +18,7 @@ interface ReportListProps {
 }
 
 export default function ReportList({ initialReports }: ReportListProps) {
+  const router = useRouter()
   const [reports, setReports] = useState<ReportItem[]>(initialReports)
   const [currentPage, setCurrentPage] = useState(1)
   const [searchQuery, setSearchQuery] = useState("")
@@ -69,8 +71,12 @@ export default function ReportList({ initialReports }: ReportListProps) {
     switch (status) {
       case "fixed":
         return "bg-green-100 text-green-800 hover:bg-green-100"
+      case "in_provision":
+        return "bg-blue-100 text-blue-800 hover:bg-blue-100"
       case "pending":
         return "bg-yellow-100 text-yellow-800 hover:bg-yellow-100"
+      case "rejected":
+        return "bg-red-100 text-red-800 hover:bg-red-100"
       default:
         return "bg-gray-100 text-gray-800 hover:bg-gray-100"
     }
@@ -91,8 +97,12 @@ export default function ReportList({ initialReports }: ReportListProps) {
     switch (status) {
       case "fixed":
         return "Fixed"
+      case "in_provision":
+        return "In Provision"
       case "pending":
         return "Pending"
+      case "rejected":
+        return "Rejected"
       default:
         return status
     }
@@ -131,8 +141,10 @@ export default function ReportList({ initialReports }: ReportListProps) {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>
-                <SelectItem value="fixed">Fixed</SelectItem>
                 <SelectItem value="pending">Pending</SelectItem>
+                <SelectItem value="in_provision">In Provision</SelectItem>
+                <SelectItem value="fixed">Fixed</SelectItem>
+                <SelectItem value="rejected">Rejected</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -154,7 +166,11 @@ export default function ReportList({ initialReports }: ReportListProps) {
             <TableBody>
               {currentReportsOnPage.length > 0 ? (
                 currentReportsOnPage.map((report) => (
-                  <TableRow key={report.id}>
+                  <TableRow 
+                    key={report.id}
+                    className="cursor-pointer hover:bg-muted/50 transition-colors"
+                    onClick={() => router.push(`/admin/reports/${report.id}`)}
+                  >
                     <TableCell>
                       <ReportImage imageUrl={report.imageUrl} alt={report.name || `Report ${report.id}`} />
                     </TableCell>

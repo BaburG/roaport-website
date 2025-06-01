@@ -3,8 +3,10 @@ export type VerificationStatus =
   | "pending_verification"
 
 export type ReportStatus =
-  | "fixed"
   | "pending"
+  | "in_provision"
+  | "fixed"
+  | "rejected"
 
 export interface Location {
   latitude: number
