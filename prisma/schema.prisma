@@ -17,19 +17,20 @@ model UploadScoreboard {
 }
 
 model reports {
-  id           Int              @id @default(autoincrement())
-  name         String           @db.VarChar(255)
-  longitude    Float
-  latitude     Float
-  bucket_name  String           @db.VarChar(255)
-  file_name    String           @db.VarChar(255)
-  date_created DateTime?        @default(now()) @db.Timestamp(6)
-  detail       String?
-  type         String?          @db.VarChar(255)
-  username     String           @db.VarChar(255)
-  verified     DateTime?
-  status       String?          @default("PENDING") @db.VarChar(255)
-  Scoreboard   UploadScoreboard @relation(fields: [username], references: [username], onDelete: Cascade)
+  id               Int              @id @default(autoincrement())
+  name             String           @db.VarChar(255)
+  longitude        Float
+  latitude         Float
+  bucket_name      String           @db.VarChar(255)
+  file_name        String           @db.VarChar(255)
+  date_created     DateTime?        @default(now()) @db.Timestamp(6)
+  detail           String?
+  type             String?          @db.VarChar(255)
+  username         String           @db.VarChar(255)
+  verified         DateTime?
+  status           String?          @default("PENDING") @db.VarChar(255)
+  notification_token String?        @db.VarChar(255)
+  Scoreboard       UploadScoreboard @relation(fields: [username], references: [username], onDelete: Cascade)
 
   @@map("reports")
 }
