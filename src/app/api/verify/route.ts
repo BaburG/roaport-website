@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma'; // Assuming prisma client is at '@/lib/prisma'
+import { NotificationService } from '@/services/notification.service';
 
 export async function POST(request: Request) {
   try {
@@ -30,6 +31,26 @@ export async function POST(request: Request) {
         verified: new Date(),
       },
     });
+
+    // Send notification if notification_token exists
+    if (updatedReport.notification_token) {
+      try {
+        await NotificationService.sendPushNotification(
+          updatedReport.notification_token,
+          {
+            title: 'Rapor Doğrulandı',
+            body: `${updatedReport.name} raporu başarıyla doğrulandı.`,
+            data: {
+              reportId: updatedReport.id,
+              type: updatedReport.type,
+              status: 'verified'
+            }
+          }
+        );
+      } catch (notificationError) {
+        console.error('Error sending notification:', notificationError);
+      }
+    }
 
     return NextResponse.json({ success: true, report: updatedReport }, { status: 200 });
   } catch (error) {
