@@ -1,6 +1,20 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
+interface TokenResponse {
+  access_token?: string
+  refresh_token?: string
+  expires_in?: number
+  token_type?: string
+}
+
+interface NotificationResponse {
+  id: string
+  username: string
+  pushToken: string
+  tokens?: TokenResponse
+}
+
 export async function POST(request: NextRequest) {
   try {
     // 1) Parse request body
@@ -82,7 +96,7 @@ export async function POST(request: NextRequest) {
         throw new Error('Failed to create new user')
       }
 
-      // 4a) Immediately re-fetch to get the newly created user’s UUID
+      // 4a) Immediately re-fetch to get the newly created user's UUID
       const rereadResponse = await fetch(
         `${process.env.KEYCLOAK_URL}/admin/realms/${process.env.KEYCLOAK_REALM}/users?username=${encodeURIComponent(
           userId
@@ -139,7 +153,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 7) If we just created a new Keycloak user, request tokens for them
-    let tokens: any = null
+    let tokens: TokenResponse | null = null
     if (!existingUser) {
       const tokenResponse = await fetch(
         `${process.env.KEYCLOAK_URL}/realms/${process.env.KEYCLOAK_REALM}/protocol/openid-connect/token`,
@@ -158,7 +172,7 @@ export async function POST(request: NextRequest) {
     }
 
     // 8) Return a successful JSON response
-    const responsePayload: any = {
+    const responsePayload: NotificationResponse = {
       id: finalUserId,
       username: userId,
       pushToken: expoPushToken,

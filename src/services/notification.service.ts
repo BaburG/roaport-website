@@ -6,7 +6,7 @@ const expo = new Expo();
 export interface NotificationPayload {
     title: string;
     body: string;
-    data?: Record<string, any>;
+    data?: Record<string, unknown>;
 }
 
 export class NotificationService {

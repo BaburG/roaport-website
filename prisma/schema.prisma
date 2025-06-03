@@ -34,3 +34,11 @@ model reports {
 
   @@map("reports")
 }
+
+model NotificationToken {
+  id                Int     @id @default(autoincrement())
+  userId            String? @unique @map("user_id")
+  notificationToken String? @map("notification_token")
+  
+  @@map("notification_tokens")
+}
